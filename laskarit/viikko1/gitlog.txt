@@ -1,0 +1,116 @@
+commit 67d5f4e899ffab21af4024b72803ac524c90f871
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:42:03 2018 +0200
+
+    tiedostojamuokkaus
+
+ tiedostoja/file1  | 0
+ tiedostoja/file2  | 0
+ tiedostoja/file22 | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit bd1255110616f347abfe18dadf4dabfad0b8da95
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:41:12 2018 +0200
+
+    tiedostoja
+
+ tiedostoja/file1 | 0
+ tiedostoja/file2 | 0
+ tiedostoja/file3 | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 43a5f3d685e65b5ac5feb479df0aed9b10c8805a
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:38:59 2018 +0200
+
+    git add -p muutoksia
+
+ eka.txt    | 2 +-
+ kolmas.txt | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 37158f07030019b0bb46548104fa6293ab2a3696
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:34:34 2018 +0200
+
+    tiedosto.txt uudelleennimeäminen
+
+ eka.txt      | 7 +++++++
+ tiedosto.txt | 7 -------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+commit d6fd93e17d14c04d639f67377775d49b396e27b5
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:33:26 2018 +0200
+
+    toinen poistettu
+
+ toinen.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 8a13610583f45aedccf7a8a2d423a2810b8d9474
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:30:12 2018 +0200
+
+    tiedosto.txt editoitu
+
+ tiedosto.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2e5dd0781f40f80b3635e986da3548529c4f35ab
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:29:02 2018 +0200
+
+    paljontekstiä
+
+ tiedosto.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit efa3419020956862fdcfd83c57dd9fb3e5221fbf
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:16:08 2018 +0200
+
+    stuffia lisätty
+
+ stuff/jokin_tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit c418aa41b68ed25e1f7537390d31dad98076012b
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:15:09 2018 +0200
+
+    tokaa ja kolmatta muokattu
+
+ kolmas.txt | 1 +
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit dc5657f67e1ba0eb1b19347b2d77fe6aa575e952
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:13:48 2018 +0200
+
+    kolmas lisätty
+
+ kolmas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit d678a525923742b8007f910265265e80efbe668f
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:10:43 2018 +0200
+
+    muutos ja lisäys
+
+ tiedosto.txt | 1 +
+ toinen.txt   | 0
+ 2 files changed, 1 insertion(+)
+
+commit 81fc8b272d9a109a65e19dfd5e319abfa75604f8
+Author: nakkekakke <juntusen.niko@gmail.com>
+Date:   Thu Mar 15 20:08:38 2018 +0200
+
+    tiedosto.txt luotu
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
