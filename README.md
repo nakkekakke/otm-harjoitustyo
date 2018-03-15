@@ -8,3 +8,5 @@ _Harjoitustyön_ **repositorio**
 
 [komentorivi.txt](https://github.com/nakkekakke/otm-harjoitustyo/blob/master/laskarit/viikko1/komentorivi.txt)<br>
 [gitlog.txt](https://github.com/nakkekakke/otm-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt)
+
+muutos!
