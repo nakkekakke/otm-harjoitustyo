@@ -34,7 +34,7 @@ Lisätään ennen lisätoiminnallisuuksia.
 - käyttäjä voi poistaa kryptovaluuttoja portfoliostaan
   - jokaisen valuutan kohdalla on poistonäppäin
 
-## Suunnitellut perustoiminnallisuudet
+## Suunnitellut lisätoiminnallisuudet
 
 Lisätään perustoiminnallisuuksien jälkeen.
 
