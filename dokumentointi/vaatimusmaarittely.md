@@ -2,13 +2,13 @@
 
 ## Sovelluksen tarkoitus
 
-Tämän sovelluksen avulla käyttäjä pystyy pitämään kirjaa omasta kryptovaluuttaportfoliostaan ja seuraamaan sen kokonaisarvoa euroissa (euroarvo haetaan coinmarketcap.com:in [API:sta](https://coinmarketcap.com/api/). Sovelluksella näkee myös portfolion historiallisen arvonkehityksen. Sovelluksella voi olla monta rekisteröitynyttä käyttäjää, ja kirjautumalla sisään jokainen käyttäjä näkee oman portfolionsa.
+Tämän sovelluksen avulla käyttäjä pystyy pitämään kirjaa omista kryptovaluuttasijoituksistaan lisäämällä niiden tiedot portfolioon. Käyttäjä pystyy seuraamaan sekä koko portfolionsa että yksittäisten portfolion kryptovaluuttojen arvoa euroissa (euroarvo haetaan coinmarketcap.com:in [API:sta](https://coinmarketcap.com/api/). Sovelluksella voi olla monta rekisteröitynyttä käyttäjää, ja kirjautumalla sisään jokainen käyttäjä näkee oman portfolionsa.
 
 ## Käyttäjät
 
 Aluksi sovelluksella on vain yksi käyttäjäryhmä, _normaali käyttäjä_. Lisäoikeuksilla varustettu _pääkäyttäjä_ saatetaan lisätä tulevaisuudessa.
 
-## Suunnitellut päätoiminnallisuudet
+## Suunnitellut perustoiminnallisuudet
 
 Lisätään ennen lisätoiminnallisuuksia.
 
@@ -29,25 +29,40 @@ Lisätään ennen lisätoiminnallisuuksia.
 
 - käyttäjä voi lisätä kryptovaluuttoja omaan portfolioonsa
   - lisättäessä syötetään valuutan nimi ja lisättävä määrä
-  - jos portfoliossa on jo valuuttaa, jota sinne lisätään, tämän uuden ostoerän arvo lisätään entisen arvoon
+  - jos portfoliossa on jo valuuttaa, jota sinne lisätään, tämän uuden ostoerän määrä lisätään entisen määrään
 
 - käyttäjä voi poistaa kryptovaluuttoja portfoliostaan
   - jokaisen valuutan kohdalla on poistonäppäin
 
-## Suunnitellut lisätoiminnallisuudet
+## Suunnitellut perustoiminnallisuudet
 
-Lisätään päätoiminnallisuuksien jälkeen.
+Lisätään perustoiminnallisuuksien jälkeen.
 
-- käyttäjätunnuksen luonnin (ja sisäänkirjautumisen) yhteydessä vaaditaan myös salasana
-- valuuttoja lisättäessä syötetään ostokurssi sekä valuutta, jolla ostos tehtiin
+- käyttäjätunnuksen luonnin (ja sisäänkirjautumisen) yhteydessä käyttäjältä vaaditaan myös salasana
+
+- jokainen valuuttaomistuksen lisäys käsitellään erillisenä **ostoeränä**
+  - jokaisen ostoerän kohdalla näkyy valuutan määrä, ostopäivämäärä ja tämänhetkinen arvo euroina
+  - ostoerät poistettavissa yksittäisesti
+  
+- jokaisen valuuttaomistuksen kohdalla näkyy koko omistuksen arvo euroina, sekä lista ostoeristä
+  - koko omistuksen arvo yhtä suuri kuin ostoerien arvojen summa
+  
+- ostoerää lisättäessä käyttäjältä vaaditaan ostopäivämäärä, ostohinta (kurssi) sekä valuutta, jolla ostos tehtiin
   - valuutta joko euro tai toinen kryptovaluutta
     - jos kryptovaluutta, vähennetään vastaava määrä lähtövaluuttaa portfoliosta (valuutanvaihto)
-- valuuttaomistusten määrää voi muokata
-- jokaisen valuuttaomistuksen kohdalla näkyy omistuksen arvo euroina
+  
+- sovelluksessa näkyy portfolion kokonaisarvo euroina
 
-## Jatkokehitys
+- sovelluksessa näkyy euromäärä, jonka käyttäjä on sijoittanut portfolioonsa, sekä voiton/tappion suuruus
 
-- valuuttaomistusten ostohintaa voi muokata
-- valuuttaomistusta lisättäessä liitetään ostoerään ostopäivämäärä
-- jokaisen valuuttaomistuksen kohdalla näkyy lista ostoeristä
-  - yksittäiset ostoerät muokattavissa
+- sovelluksessa on (esim.) taulukko, jossa kuvataan portfolion arvonkehitystä
+  - tarkkuus alustavasti kuukausittainen
+  - seuraa portfolion absoluuttista arvoa ja prosentuaalista kehitystä
+
+## Ideoita jatkokehitykseen
+
+- käyttäjä voi muokata ostoerän ostohintaa ja ostetun valuutan määrää
+  
+- sovelluksessa on ympyrädiagrammi, joka kuvaa portfolion eri kryptovaluuttojen osuutta koko portfoliosta
+
+- sovelluksessa on viivadiagrammi, joka kuvaa portfolion arvonkehitystä
