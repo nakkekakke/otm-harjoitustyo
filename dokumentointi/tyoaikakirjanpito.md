@@ -2,7 +2,7 @@
 
 | päivä | aika | mitä tein  |
 | :----:|:-----| :-----|
-|       |      | x |
+| 25.3  | 3 h  | vaatimusmäärittely |
 |       |      | x |
 |       |      | x |
 |       |      | x |
