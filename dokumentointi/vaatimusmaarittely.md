@@ -10,7 +10,7 @@ Aluksi sovelluksella on vain yksi käyttäjäryhmä, _normaali käyttäjä_. Lis
 
 ## Suunnitellut perustoiminnallisuudet
 
-Lisätään ennen lisätoiminnallisuuksia.
+Tässä vaiheessa ei euro-arvoja oteta vielä mukaan.
 
 ### Ennen sisäänkirjautumista
 
@@ -38,22 +38,33 @@ Lisätään ennen lisätoiminnallisuuksia.
 
 Lisätään perustoiminnallisuuksien jälkeen.
 
+### Sisäänkirjautuminen
+
 - käyttäjätunnuksen luonnin (ja sisäänkirjautumisen) yhteydessä käyttäjältä vaaditaan myös salasana
+
+### Portfolionhallinta
 
 - jokainen valuuttaomistuksen lisäys käsitellään erillisenä **ostoeränä**
   - jokaisen ostoerän kohdalla näkyy valuutan määrä, ostopäivämäärä ja tämänhetkinen arvo euroina
   - ostoerät poistettavissa yksittäisesti
   
-- jokaisen valuuttaomistuksen kohdalla näkyy koko omistuksen arvo euroina, sekä lista ostoeristä
-  - koko omistuksen arvo yhtä suuri kuin ostoerien arvojen summa
-  
 - ostoerää lisättäessä käyttäjältä vaaditaan ostopäivämäärä, ostohinta (kurssi) sekä valuutta, jolla ostos tehtiin
   - valuutta joko euro tai toinen kryptovaluutta
     - jos kryptovaluutta, vähennetään vastaava määrä lähtövaluuttaa portfoliosta (valuutanvaihto)
-  
+
+### Portfolion tietojen esitys
+
+- jokaisen valuuttaomistuksen kohdalla näkyy koko omistuksen arvo euroina, sekä lista ostoeristä
+  - koko omistuksen arvo saadaan ostoerien arvojen summasta
+
 - sovelluksessa näkyy portfolion kokonaisarvo euroina
 
 - sovelluksessa näkyy euromäärä, jonka käyttäjä on sijoittanut portfolioonsa, sekä voiton/tappion suuruus
+
+- sovelluksessa kuvataan portfolion arvonmuutos viimeisen tunnin, päivän ja viikon aikana
+  - koko portfolion arvonmuutos sekä jokaisen kryptovaluutan arvonmuutos erikseen
+
+#### Seuraava toteutetaan, jos jää aikaa
 
 - sovelluksessa on (esim.) taulukko, jossa kuvataan portfolion arvonkehitystä
   - tarkkuus alustavasti kuukausittainen
