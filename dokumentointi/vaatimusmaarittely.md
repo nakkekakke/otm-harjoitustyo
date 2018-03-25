@@ -2,7 +2,7 @@
 
 ## Sovelluksen tarkoitus
 
-Tämän sovelluksen avulla käyttäjä pystyy pitämään kirjaa omista kryptovaluuttasijoituksistaan lisäämällä niiden tiedot portfolioon. Käyttäjä pystyy seuraamaan sekä koko portfolionsa että yksittäisten portfolion kryptovaluuttojen arvoa euroissa (euroarvo haetaan coinmarketcap.com:in [API:sta](https://coinmarketcap.com/api/). Sovelluksella voi olla monta rekisteröitynyttä käyttäjää, ja kirjautumalla sisään jokainen käyttäjä näkee oman portfolionsa.
+Tämän sovelluksen avulla käyttäjä pystyy pitämään kirjaa omista kryptovaluuttasijoituksistaan lisäämällä niiden tiedot portfolioon. Käyttäjä pystyy seuraamaan sekä koko portfolionsa että yksittäisten portfolion kryptovaluuttojen arvoa euroissa (euroarvo haetaan coinmarketcap.com:in [API:sta](https://coinmarketcap.com/api/)). Sovelluksella voi olla monta rekisteröitynyttä käyttäjää, ja kirjautumalla sisään jokainen käyttäjä näkee oman portfolionsa.
 
 ## Käyttäjät
 
