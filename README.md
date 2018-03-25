@@ -1,8 +1,16 @@
-# OTM-harjoitustyö
+# CryptoTracker
 
-_Harjoitustyön_ **repositorio**
+### KESKEN!
 
-## Tehtävät
+Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti.
+
+## Dokumentaatio
+
+Linkit eri dokumentteihin
+
+## Komentorivitoiminnot
+
+(testit, jacoco, jar, javadoc, checkstyle)
 
 ### Viikko 1
 
