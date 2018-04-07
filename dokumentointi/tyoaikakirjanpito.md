@@ -3,7 +3,7 @@
 | päivä | aika | mitä tein  |
 | :----:|:-----| :-----|
 | 25.3  | 3 h  | vaatimusmäärittely |
-|       |      | x |
+| 5.4   | 5 h  | suunnittelua, luokkien ja tietokannan luonti |
 |       |      | x |
 |       |      | x |
 |       |      | x |
