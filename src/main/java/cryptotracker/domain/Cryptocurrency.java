@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-// Yksittäistä portfoliossa olevaa kryptovaluttaa kuvaava luokka
+// The class describing a cryptocurrency in a portfolio
 public class Cryptocurrency {
     
     private int id;

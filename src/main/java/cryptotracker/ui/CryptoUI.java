@@ -5,6 +5,7 @@ import cryptotracker.dao.*;
 import java.util.Scanner;
 
 
+// The class for the user interface
 public class CryptoUI {
     
     public static void main(String args[]) throws Exception {

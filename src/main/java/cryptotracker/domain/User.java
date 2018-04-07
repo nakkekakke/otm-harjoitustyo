@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-
-
-// Käyttäjää kuvaava luokka
+// A class describing a registered user
 public class User {
     
     private int id;

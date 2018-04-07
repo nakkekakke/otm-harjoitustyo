@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+// The class describing a portfolio of a user
 public class Portfolio {
     
     private int id;

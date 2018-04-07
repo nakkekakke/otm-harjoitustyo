@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+// The class for communication between Portfolios and the database
 public class PortfolioDao implements Dao<Portfolio, Integer> {
     
     private Database database;

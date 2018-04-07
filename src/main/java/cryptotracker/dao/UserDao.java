@@ -6,6 +6,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// The class for communication between Users and the database
 public class UserDao implements Dao<User, Integer> {
     
     private Database database;

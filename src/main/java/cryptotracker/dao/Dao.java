@@ -3,6 +3,8 @@ package cryptotracker.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+
+// The DAO interface for communication with the database
 public interface Dao<T, K> {
 /**  Finds all objects of type T from the database 
  * 
