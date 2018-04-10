@@ -1,6 +1,6 @@
 # CryptoTracker
 
-Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti. Tällä hetkellä sovellukseen voi vain rekisteröityä, kirjautua sisään ja kirjautua ulos. Sovellus on englanninkielinen.
+Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti. **Tällä hetkellä sovellukseen voi vain rekisteröityä, kirjautua sisään ja kirjautua ulos.** Sovellus on englanninkielinen.
 
 ## Dokumentaatio
 
