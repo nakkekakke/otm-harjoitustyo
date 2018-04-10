@@ -1,13 +1,14 @@
 package cryptotracker.dao;
 
-import cryptotracker.domain.Database;
 import cryptotracker.domain.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-// The class for communication between Users and the database
+/** The class for communication between users and the database
+ * 
+ */
 public class UserDao implements Dao<User, Integer> {
     
     private Database database;
@@ -16,13 +17,14 @@ public class UserDao implements Dao<User, Integer> {
         this.database = database;
     }
     
-/**  Finds an user by ID
+/**  Finds an user by id
  * 
- *   @param id ID associated with a user
- *   @return User, if any with the specified ID was found; null if no user was found
+ *   @param id The id associated with a user
+ *   @return User, if any with the specified id was found; null if no user was found
  *   @throws java.sql.SQLException
  */    
-    public User findOneWithID(int id) throws SQLException {
+    @Override
+    public User findOneWithId(Integer id) throws SQLException {
         Connection conn = database.getConnection();
         PreparedStatement stat = conn.prepareStatement("SELECT * FROM User WHERE User.id = ?");
         stat.setInt(1, id);
@@ -81,7 +83,7 @@ public class UserDao implements Dao<User, Integer> {
         PreparedStatement stat = conn.prepareStatement("SELECT * FROM User");
         ResultSet rs = stat.executeQuery();
         
-        List<User> users = new ArrayList();
+        List<User> users = new ArrayList<>();
         
         while (rs.next()) {
             users.add(new User(rs.getInt("id"), rs.getString("username")));

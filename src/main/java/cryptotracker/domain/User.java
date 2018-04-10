@@ -5,17 +5,19 @@ import java.util.List;
 import java.util.Objects;
 
 
-// A class describing a registered user
+/** A class describing a registered user
+ * 
+ */
 public class User {
     
     private int id;
     private String username;
-    private List<Portfolio> portfolios;
+    private Portfolio portfolio;
     
     public User(int id, String username){
         this.id = id;
         this.username = username;
-        this.portfolios = new ArrayList<>();
+        this.portfolio = null;
     }
     
     public int getId() {
@@ -26,8 +28,12 @@ public class User {
         return username;
     }
     
-    public List<Portfolio> getPortfolios() {
-        return portfolios;
+    public void setPortfolio(Portfolio p) {
+        portfolio = p;
+    }
+    
+    public Portfolio getPortfolio() {
+        return portfolio;
     }
     
     @Override

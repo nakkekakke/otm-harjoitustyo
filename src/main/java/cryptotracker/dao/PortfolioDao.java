@@ -1,6 +1,5 @@
 package cryptotracker.dao;
 
-import cryptotracker.domain.Database;
 import cryptotracker.domain.Portfolio;
 import cryptotracker.domain.User;
 import java.sql.Connection;
@@ -11,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-// The class for communication between Portfolios and the database
+/** The class for communication between portfolios and the database
+ * 
+ */
 public class PortfolioDao implements Dao<Portfolio, Integer> {
     
     private Database database;
@@ -22,13 +23,14 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         this.userDao = userDao;
     }
 
-/**  Finds an user by ID
+/**  Finds a portfolio by id
  * 
  *   @param id ID associated with a user
  *   @return User, if any with the specified ID was found; null if no user was found
  *   @throws java.sql.SQLException
  */    
-    public Portfolio findOneWithId(int id) throws SQLException {
+    @Override
+    public Portfolio findOneWithId(Integer id) throws SQLException {
         Connection conn = database.getConnection();
         PreparedStatement stat = conn.prepareStatement("SELECT * FROM Portfolio WHERE Portfolio.id = ?");
         stat.setInt(1, id);
@@ -41,9 +43,9 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
             return null;
         }
         
-        User user = userDao.findOneWithID(rs.getInt("user_id"));
+        User user = userDao.findOneWithId(rs.getInt("user_id"));
         
-        Portfolio portfolio = new Portfolio(rs.getInt("id"), user, rs.getString("name"));
+        Portfolio portfolio = new Portfolio(rs.getInt("id"), user);
         
         rs.close();
         stat.close();
@@ -51,9 +53,9 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         return portfolio;
     }    
     
-/**  Finds all users stored in the database
+/**  Finds all portfolios stored in the database
  * 
- *   @return A list containing every user found in the database, an empty list if nothing was found
+ *   @return A list containing every portfolio found in the database, an empty list if nothing was found
  *   @throws java.sql.SQLException
  */ 
     @Override
@@ -62,11 +64,11 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         PreparedStatement stat = conn.prepareStatement("SELECT * FROM Portfolio");
         ResultSet rs = stat.executeQuery();
         
-        List<Portfolio> portfolios = new ArrayList();
+        List<Portfolio> portfolios = new ArrayList<>();
         
         while (rs.next()) {
-            User user = userDao.findOneWithID(rs.getInt("user_id"));
-            portfolios.add(new Portfolio(rs.getInt("id"), user, rs.getString("name")));
+            User user = userDao.findOneWithId(rs.getInt("user_id"));
+            portfolios.add(new Portfolio(rs.getInt("id"), user));
         }
         
         rs.close();
@@ -76,7 +78,7 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         return portfolios;
     }
     
-/**  Adds a user to the database 
+/**  Adds a portfolio to the database 
  * 
  *   @param portfolio The portfolio that will be saved to the database
  *   @return The saved portfolio, or null if portfolio was already in the database
@@ -84,15 +86,13 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
  */ 
     @Override
     public Portfolio save(Portfolio portfolio) throws SQLException {
-        
         if (findOneWithId(portfolio.getId()) != null) {     // checks if portfolio already exists in the database
             return null;
         }
         
         Connection conn = database.getConnection();
-        PreparedStatement stat = conn.prepareStatement("INSERT INTO Portfolio (name, user_id) VALUES (?, ?)");
-        stat.setString(1, portfolio.getNimi());
-        stat.setInt(2, portfolio.getUser().getId());
+        PreparedStatement stat = conn.prepareStatement("INSERT INTO Portfolio (user_id) VALUES (?)");
+        stat.setInt(1, portfolio.getUser().getId());
         
         stat.executeUpdate();
         
@@ -102,7 +102,7 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         return portfolio;
     }
     
-/**  Deletes a portfolio from the database using id
+/**  Deletes a portfolio from the database using user's id
  * 
  *   @param id The id of the portfolio that is to be deleted
  *   @throws java.sql.SQLException

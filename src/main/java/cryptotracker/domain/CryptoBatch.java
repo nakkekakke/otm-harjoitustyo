@@ -3,7 +3,9 @@ package cryptotracker.domain;
 import java.time.LocalDate;
 
 
-// The class describing a single purchase of a cryptocurrency
+/** The class describing a single purchase of a cryptocurrency
+ * 
+ */
 public class CryptoBatch {
     
     private int id;
