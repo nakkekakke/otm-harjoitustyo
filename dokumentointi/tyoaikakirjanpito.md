@@ -7,7 +7,7 @@
 | 7.4.  | 3 h  | tiedon tallennuksen suunnittelua, luokkien korjailua, simppelin tekstikäyttöliittymän alustus|
 |       | 5 h  | dao-rakenne ja tietokantatoiminnot käyttäjille ja portfolioille |
 | 9.4.  | 4 h  | suunnittelua, daon laajentamista, alustava sovelluslogiikka |
-| 10.4  | 3 h  | käyttöliittymä, testejä |
+| 10.4  | 3 h  | sovelluslogiikan ja käyttöliittymän laajentamista, testejä |
 |       |      | x |
 |       |      | x |
 |       |      | x |
