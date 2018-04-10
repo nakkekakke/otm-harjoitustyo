@@ -1,20 +1,27 @@
 # CryptoTracker
 
-### KESKEN!
-
-Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti.
+Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti. Sovellus on englanninkielinen.
 
 ## Dokumentaatio
 
-Linkit eri dokumentteihin
+[Vaatimusmäärittely](https://github.com/nakkekakke/CryptoTracker/blob/master/dokumentointi/vaatimusmaarittely.md)
+
+[Työaikakirjanpito](https://github.com/nakkekakke/CryptoTracker/blob/master/dokumentointi/tyoaikakirjanpito.md)
 
 ## Komentorivitoiminnot
 
-(testit, jacoco, jar, javadoc, checkstyle)
+### Testaaminen
 
-### Viikko 1
+Testit suoritetaan komennolla
 
-[komentorivi.txt](https://github.com/nakkekakke/otm-harjoitustyo/blob/master/laskarit/viikko1/komentorivi.txt)<br>
-[gitlog.txt](https://github.com/nakkekakke/otm-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt)
+```
+mvn test
+```
 
-muutos! muutos2!
+Testikattavuusraportti luodaan komennolla
+
+```
+mvn jacoco:report
+```
+
+Tätä kattavuusraporttia voi tarkastella avaamalla selaimella repositorion juuresta löytyvän tiedoston _target/site/jacoco/index.html_
