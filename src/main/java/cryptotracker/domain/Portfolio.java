@@ -36,4 +36,13 @@ public class Portfolio {
         return cryptoList;
     }
     
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Portfolio)) {
+            return false;
+        }
+        
+        Portfolio other = (Portfolio) object;
+        return this.user.equals(other.getUser()) && this.id == other.getId();
+    }
 }

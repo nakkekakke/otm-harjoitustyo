@@ -43,14 +43,7 @@ public class User {
         }
         
         User other = (User) object;
-        return this.username.equals(other.username);
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + Objects.hashCode(this.username);
-        return hash;
+        return this.username.equals(other.username) && this.id == other.id;
     }
     
 }

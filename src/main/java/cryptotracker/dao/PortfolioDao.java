@@ -73,21 +73,19 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
     /** Adds a portfolio to the database 
      * 
      * @param portfolio The portfolio that will be saved to the database
-     * @return The saved portfolio; null if portfolio was already in the database
+     * @return The saved portfolio; null if an error occurred
      * @throws java.sql.SQLException
      */ 
     @Override
-    public Portfolio save(Portfolio portfolio) throws SQLException {
-        if (findOneWithId(portfolio.getId()) != null) {
-            return null;
-        }
-        
+    public Portfolio save(Portfolio portfolio) throws SQLException {        
         try (Connection conn = database.getConnection(); 
              PreparedStatement stat = conn.prepareStatement("INSERT INTO Portfolio (user_id) VALUES (?)")) {
             
             stat.setInt(1, portfolio.getUser().getId());
             stat.executeUpdate();
             
+        } catch (SQLException e) {
+            return null;
         }
         
         return portfolio;
@@ -100,7 +98,6 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
      */ 
     @Override
     public void delete(Integer id) throws SQLException {
-
         try (Connection conn = database.getConnection();
              PreparedStatement stat = conn.prepareStatement("DELETE FROM Portfolio WHERE Portfolio.id = " + id)) {
             

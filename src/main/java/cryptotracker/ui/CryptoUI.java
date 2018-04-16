@@ -2,6 +2,11 @@ package cryptotracker.ui;
 
 import cryptotracker.domain.*;
 import cryptotracker.dao.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Properties;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -35,11 +40,21 @@ public class CryptoUI extends Application {
     
     /** Initializes the program
      *
-     * @throws ClassNotFoundException, if initializing the database fails
+     * @throws java.lang.ClassNotFoundException If initializing the database fails
+     * @throws java.io.FileNotFoundException If configuration file was not found
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException 
      */
     @Override
-    public void init() throws ClassNotFoundException {
-        this.database = new Database("jdbc:sqlite:db/cryptotracker.db");
+    public void init() throws ClassNotFoundException, FileNotFoundException, IOException, SQLException {
+        Properties properties = new Properties();
+        
+        properties.load(new FileInputStream("config.properties"));
+        
+        String databaseAddress = properties.getProperty("databaseAddress");
+        
+        this.database = new Database("jdbc:sqlite:" + databaseAddress);
+        this.database.initializeTables();
         this.userDao = new UserDao(database);
         this.portfolioDao = new PortfolioDao(database, userDao);
         this.service = new CryptoService(userDao, portfolioDao);

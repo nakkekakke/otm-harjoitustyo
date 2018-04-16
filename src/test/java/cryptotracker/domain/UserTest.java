@@ -16,10 +16,6 @@ public class UserTest {
         testUser = new User(313, "testUsername");
     }
 
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void constructorSetsUsernameCorrectly() {
         assertEquals("testUsername", testUser.getUsername());
@@ -40,7 +36,13 @@ public class UserTest {
         Portfolio p = new Portfolio(15, testUser);
         testUser.setPortfolio(p);
         
-        assertEquals(15, testUser.getPortfolio().getId());
+        assertEquals(p, testUser.getPortfolio());
         assertEquals(testUser, testUser.getPortfolio().getUser());
+    }
+    
+    @Test
+    public void equalsFailsIfObjectsDifferentTypes() {
+        Object o = new String();
+        assertFalse(testUser.equals(o));
     }
 }

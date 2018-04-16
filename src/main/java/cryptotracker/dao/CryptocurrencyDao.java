@@ -109,9 +109,7 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
      */ 
     @Override
     public Cryptocurrency save(Cryptocurrency crypto) throws SQLException {
-//        if (findOneWithName(crypto.getId()) != null) {
-//            return null;
-//        }
+// SEARCH PORTFOLIO FIRST
         
         try (Connection conn = database.getConnection();
              PreparedStatement stat = conn.prepareStatement("INSERT INTO Cryptocurrency (name) VALUES (?)")) {

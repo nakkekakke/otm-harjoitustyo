@@ -18,7 +18,7 @@ public class CryptoBatch {
         this.id = id;
         this.crypto = crypto;
         this.amount = amount;
-        this.totalPaid = totalPaid;
+        this.totalPaid = totalPaid; // in euro cents, for example
         this.date = date;
     }
     
@@ -44,5 +44,15 @@ public class CryptoBatch {
     
     public double getExchangeRate() {
         return totalPaid / amount;
+    }
+    
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof CryptoBatch)) {
+            return false;
+        }
+        
+        CryptoBatch other = (CryptoBatch) object;
+        return this.id == other.getId();
     }
 }
