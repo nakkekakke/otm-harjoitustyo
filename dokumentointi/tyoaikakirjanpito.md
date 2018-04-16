@@ -11,7 +11,7 @@
 | 10.4. | 3 h  | Sovelluslogiikan ja käyttöliittymän laajentamista, pari testiä |
 | 15.4. | 3 h  | JavaFX:n opettelua, graafisen käyttöliittymän alustus |
 |       | 3 h  | Koodin refaktorointia ja selkeyttämistä, tulevien toimintojen suunnittelua |
+| 16.4. | 2 h  | Lisää refaktorointia |
+|       | 6 h  | Testejä, Mockiton ja siihen liittyvien asioiden opettelua |
 |       |      | x |
-|       |      | x |
-|       |      | x |
-| yht.  | 29 h |  | 
+| yht.  | 37 h |  | 
