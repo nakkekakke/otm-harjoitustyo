@@ -13,5 +13,5 @@
 |       | 3 h  | Koodin refaktorointia ja selkeyttämistä, tulevien toimintojen suunnittelua |
 | 16.4. | 2 h  | Lisää refaktorointia |
 |       | 6 h  | Testejä, Mockiton ja siihen liittyvien asioiden opettelua |
-|       |      | x |
-| yht.  | 37 h |  | 
+| 17.4. | 1 h  | Kaavio sovelluksen rakenteen suunnitelmasta |
+| yht.  | 38 h |  | 
