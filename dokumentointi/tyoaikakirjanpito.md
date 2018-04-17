@@ -14,4 +14,5 @@
 | 16.4. | 2 h  | Lisää refaktorointia |
 |       | 6 h  | Testejä, Mockiton ja siihen liittyvien asioiden opettelua |
 | 17.4. | 1 h  | Kaavio sovelluksen rakenteen suunnitelmasta |
-| yht.  | 38 h |  | 
+|       | 6 h  | Debuggailua, lisää dao-toiminnallisuuksia |
+| yht.  | 44 h |  | 
