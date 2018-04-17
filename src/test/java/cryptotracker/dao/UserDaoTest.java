@@ -59,10 +59,10 @@ public class UserDaoTest {
         
     }
 
-     @Test
-     public void deleteTest() throws SQLException {
-         userDao.delete(testUser.getId());
-         verify(stat).setInt(1, 20);
-     }
+    @Test
+    public void deleteTest() throws SQLException {
+        userDao.delete(testUser.getId());
+        verify(stat).setInt(1, 20);
+    }
 
 }
