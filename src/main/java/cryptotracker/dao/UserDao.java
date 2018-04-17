@@ -94,7 +94,6 @@ public class UserDao implements Dao<User, Integer> {
      * @return The added user, or null if nothing was added
      * @throws java.sql.SQLException
      */ 
-    @Override
     public User save(User user) throws SQLException {
         if (findOneWithUsername(user.getUsername()) != null) {
             return null;

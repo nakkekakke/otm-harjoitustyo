@@ -76,7 +76,6 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
      * @return The saved portfolio; null if an error occurred
      * @throws java.sql.SQLException
      */ 
-    @Override
     public Portfolio save(Portfolio portfolio) throws SQLException {        
         try (Connection conn = database.getConnection(); 
              PreparedStatement stat = conn.prepareStatement("INSERT INTO Portfolio (user_id) VALUES (?)")) {

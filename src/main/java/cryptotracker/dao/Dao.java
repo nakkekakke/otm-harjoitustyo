@@ -25,13 +25,13 @@ public interface Dao<T, K> {
     List<T> findAll() throws SQLException;
     
     
-/**  Adds an object to the database 
- * 
- *   @param object The object that will be added to the database
- *   @return The added object; returns null if nothing was added
-     * @throws java.sql.SQLException
- */ 
-    T save(T object) throws SQLException;
+///**  Adds an object to the database 
+// * 
+// *   @param object The object that will be added to the database
+// *   @return The added object; returns null if nothing was added
+//     * @throws java.sql.SQLException
+// */ 
+//    T save(T object) throws SQLException;
     
     
 /**  Deletes an object with matching key from the database

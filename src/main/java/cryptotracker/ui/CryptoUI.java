@@ -6,9 +6,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -28,14 +32,16 @@ public class CryptoUI extends Application {
     private Database database;
     private UserDao userDao;
     private PortfolioDao portfolioDao;
+    private CryptocurrencyDao cryptoDao;
     private CryptoService service;
     
     private Scene loginScene;
     private Scene loggedInScene;
+    private Scene cryptoAddScene;
     
     
-    private VBox o;
-    private Label menuLabel = new Label();
+    private VBox cryptoList;
+    private Label menuLabel;
     
     
     /** Initializes the program
@@ -57,12 +63,14 @@ public class CryptoUI extends Application {
         this.database.initializeTables();
         this.userDao = new UserDao(database);
         this.portfolioDao = new PortfolioDao(database, userDao);
-        this.service = new CryptoService(userDao, portfolioDao);
+        this.cryptoDao = new CryptocurrencyDao(database, portfolioDao);
+        this.service = new CryptoService(userDao, portfolioDao, cryptoDao);
+        this.menuLabel = new Label();
     }
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Login scene
+        // LOGIN SCENE
         
         VBox loginPane = new VBox(10);
         HBox inputPane = new HBox(10);
@@ -83,6 +91,7 @@ public class CryptoUI extends Application {
                 loginMessage.setText("");
                 usernameInput.setText("");
                 primaryStage.setScene(loggedInScene);
+                //refreshCryptoList();
             } else {
                 loginMessage.setText("Username doesn't exist!");
                 loginMessage.setTextFill(Color.RED);
@@ -111,24 +120,101 @@ public class CryptoUI extends Application {
         
         loginScene = new Scene(loginPane, 400, 250);
         
-        // Main scene (shown when logged in)
+        
+        // MAIN SCENE (shown when logged in)
         
         ScrollPane mainScrollPane = new ScrollPane();
         BorderPane mainPane = new BorderPane(mainScrollPane);
-        loggedInScene = new Scene(mainPane, 400, 250);
+        
         
         HBox menuPane = new HBox(10);
         Region menuSpacer = new Region();
         HBox.setHgrow(menuSpacer, Priority.ALWAYS);
+        Button addCryptoSceneButton = new Button("Add Crypto");
         Button logoutButton = new Button("Logout");
-        menuPane.getChildren().addAll(menuLabel, menuSpacer, logoutButton);
+        menuPane.getChildren().addAll(menuLabel, menuSpacer, addCryptoSceneButton, logoutButton);
+        
+        cryptoList = new VBox(10);
+        cryptoList.setMaxWidth(350);
+        cryptoList.setMinWidth(350);
+        
+        mainScrollPane.setContent(cryptoList);
+        mainPane.setTop(menuPane);
+        
+        addCryptoSceneButton.setOnAction(e -> {
+            primaryStage.setScene(cryptoAddScene);
+        });
         
         logoutButton.setOnAction(e -> {
             service.logout();
             primaryStage.setScene(loginScene);
         });
         
-        mainPane.setTop(menuPane);
+        loggedInScene = new Scene(mainPane, 400, 250);
+        
+        
+        // ADD CRYPTO SCENE
+        
+        VBox cryptoAddPane = new VBox(10);
+        
+        HBox cryptoNamePane = new HBox(10);
+        cryptoNamePane.setPadding(new Insets(10));
+        Label cryptoNameLabel = new Label("Enter the name of the crypto");
+        TextField cryptoNameInput = new TextField();
+        cryptoNameInput.setPrefWidth(100);
+        cryptoNamePane.getChildren().addAll(cryptoNameLabel, cryptoNameInput);
+        
+        HBox cryptoAmountPane = new HBox(10);
+        cryptoAmountPane.setPadding(new Insets(10));
+        Label cryptoAmountLabel = new Label("Amount of crypto");
+        TextField cryptoAmountInput = new TextField();
+        cryptoAmountPane.getChildren().addAll(cryptoAmountLabel, cryptoAmountInput);
+        
+        HBox cryptoPricePane = new HBox(10);
+        cryptoPricePane.setPadding(new Insets(10));
+        Label cryptoPriceLabel = new Label("Price paid");
+        TextField cryptoPriceInput = new TextField();
+        cryptoPricePane.getChildren().addAll(cryptoPriceLabel, cryptoPriceInput);
+        
+        HBox cryptoDatePane = new HBox(10);
+        cryptoDatePane.setPadding(new Insets(10));
+        Label cryptoDateLabel = new Label("Date of purchase (YYYY-MM-DD)");
+        TextField cryptoDateInput = new TextField();
+        cryptoDatePane.getChildren().addAll(cryptoDateLabel, cryptoDateInput);
+        
+        HBox cryptoAddButtons = new HBox(10);
+        cryptoAddButtons.setPadding(new Insets(10));
+        Button cryptoAddButton = new Button("Add crypto");
+        Button backToMainSceneButton = new Button("Go back");
+        Region cryptoButtonSpacer = new Region();
+        HBox.setHgrow(cryptoButtonSpacer, Priority.ALWAYS);
+        cryptoAddButtons.getChildren().addAll(cryptoAddButton, cryptoButtonSpacer, backToMainSceneButton);
+        
+        Label cryptoAddLabel = new Label("For now only name works");
+        
+        
+        cryptoAddPane.getChildren().addAll(cryptoAddLabel, cryptoNamePane, cryptoAmountPane, cryptoPricePane, cryptoDatePane, cryptoAddButtons);
+        
+        
+        cryptoAddButton.setOnAction(e -> {
+            String name = cryptoNameInput.getText();
+            Cryptocurrency crypto = service.createCryptocurrency(name);
+            if (crypto == null) {
+                cryptoAddLabel.setText(name + " is already in your portfolio!");
+            } else {
+                cryptoAddLabel.setText(name + " added!");
+            }
+            //refreshCryptoList();
+        });
+        
+        backToMainSceneButton.setOnAction(e -> {
+            primaryStage.setScene(loggedInScene);
+        });
+        
+        cryptoAddScene = new Scene(cryptoAddPane, 500, 300);
+        
+        
+        // SETUP
         
         primaryStage.setTitle("CryptoTracker");
         primaryStage.setScene(loginScene);
@@ -142,6 +228,27 @@ public class CryptoUI extends Application {
     public void stop() {
         service.logout();
         System.out.println("Bye!");
+    }
+    
+    public Node createCryptoNode(Cryptocurrency crypto) {
+        HBox node = new HBox(10);
+        Label label = new Label(crypto.getName());
+        Button button = new Button("Delete");
+        button.setOnAction(e -> {
+            service.deleteCryptocurrency(crypto);
+            //refreshCryptoList();
+        });
+        
+        return node;
+    }
+    
+    private void refreshCryptoList() {
+        cryptoList.getChildren().clear();
+        
+        List<Cryptocurrency> cryptos = service.getCryptosInPortfolio();
+        cryptos.forEach(crypto -> {
+            cryptoList.getChildren().add(createCryptoNode(crypto));
+        });
     }
     
     public static void main(String[] args) {

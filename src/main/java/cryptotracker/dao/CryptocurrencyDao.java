@@ -81,11 +81,11 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
      * @return A list containing every cryptocurrency found in the specific portfolio; an empty list if nothing was found
      * @throws java.sql.SQLException 
      */
-    public List<Cryptocurrency> findAllWithPortfolio(Portfolio portfolio) throws SQLException {
+    public List<Cryptocurrency> findAllInPortfolio(Portfolio portfolio) throws SQLException {
         List<Cryptocurrency> cryptos = new ArrayList<>();
         try (Connection conn = database.getConnection();
                 PreparedStatement stat = 
-                        conn.prepareStatement("SELECT * FROM Cryptocurrency, Portfolio WHERE Cryptocurrency.portfolio_id = " + portfolio.getId());
+                        conn.prepareStatement("SELECT * FROM Cryptocurrency WHERE Cryptocurrency.portfolio_id = " + portfolio.getId());
                 ResultSet rs = stat.executeQuery()) {
             
             while (rs.next()) {
@@ -101,26 +101,42 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
         return cryptos;
     }
     
+    public Cryptocurrency findCryptocurrencyFromDatabase(Cryptocurrency crypto, Portfolio portfolio) throws SQLException {
+        for (Cryptocurrency c : findAllInPortfolio(portfolio)) {
+            if (c.equals(crypto)) {
+                return c;
+            }
+        }
+        
+        return null;
+    }
+    
     /** Adds a cryptocurrency to the database 
      * 
      * @param crypto The cryptocurrency that will be added to the database
+     * @param portfolio The portfolio of the logged in user
      * @return The added cryptocurrency, or null if nothing was added
      * @throws java.sql.SQLException
      */ 
-    @Override
-    public Cryptocurrency save(Cryptocurrency crypto) throws SQLException {
-// SEARCH PORTFOLIO FIRST
+    public Cryptocurrency save(Cryptocurrency crypto, Portfolio portfolio) throws SQLException {
+        
+        Cryptocurrency foundCrypto = findCryptocurrencyFromDatabase(crypto, portfolio);
+        
+        if (foundCrypto != null) {
+            return null;
+        }
         
         try (Connection conn = database.getConnection();
-             PreparedStatement stat = conn.prepareStatement("INSERT INTO Cryptocurrency (name) VALUES (?)")) {
+             PreparedStatement stat = conn.prepareStatement("INSERT INTO Cryptocurrency (name, portfolio_id) VALUES (?, ?)")) {
             
             stat.setString(1, crypto.getName());
+            stat.setInt(2, portfolio.getId());
             stat.executeUpdate();
         
         }
         
         return crypto;
-    }    
+    }
     
     /**  Deletes an instance of cryptocurrency from the database using id
      * 
