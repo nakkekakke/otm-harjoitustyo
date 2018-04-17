@@ -8,6 +8,8 @@ Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sove
 
 [Työaikakirjanpito](https://github.com/nakkekakke/CryptoTracker/blob/master/dokumentointi/tyoaikakirjanpito.md)
 
+[Arkkitehtuurikuvaus](https://github.com/nakkekakke/CryptoTracker/blob/master/dokumentointi/arkkitehtuuri.md)
+
 ## Komentorivitoiminnot
 
 ### Testaaminen
