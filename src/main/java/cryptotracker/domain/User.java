@@ -38,12 +38,31 @@ public class User {
     
     @Override
     public boolean equals(Object object) {
+        if (object == null) {
+            return false;
+        }
+        
         if (!(object instanceof User)) {
             return false;
         }
         
         User other = (User) object;
-        return this.username.equals(other.username) && this.id == other.id;
+        if (!this.username.equals(other.getUsername())) {
+            return false;
+        }
+//        if (this.id != other.id) {
+//            return false;
+//        }
+//        
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + this.id;
+        hash = 23 * hash + Objects.hashCode(this.username);
+        return hash;
     }
     
 }

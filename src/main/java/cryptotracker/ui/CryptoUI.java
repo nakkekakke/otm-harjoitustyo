@@ -91,7 +91,7 @@ public class CryptoUI extends Application {
                 loginMessage.setText("");
                 usernameInput.setText("");
                 primaryStage.setScene(loggedInScene);
-                //refreshCryptoList();
+                refreshCryptoList();
             } else {
                 loginMessage.setText("Username doesn't exist!");
                 loginMessage.setTextFill(Color.RED);
@@ -135,8 +135,9 @@ public class CryptoUI extends Application {
         menuPane.getChildren().addAll(menuLabel, menuSpacer, addCryptoSceneButton, logoutButton);
         
         cryptoList = new VBox(10);
-        cryptoList.setMaxWidth(350);
-        cryptoList.setMinWidth(350);
+        cryptoList.setMaxWidth(280);
+        cryptoList.setMinWidth(280);
+        refreshCryptoList();
         
         mainScrollPane.setContent(cryptoList);
         mainPane.setTop(menuPane);
@@ -201,13 +202,18 @@ public class CryptoUI extends Application {
             Cryptocurrency crypto = service.createCryptocurrency(name);
             if (crypto == null) {
                 cryptoAddLabel.setText(name + " is already in your portfolio!");
+                cryptoAddLabel.setTextFill(Color.RED);
             } else {
                 cryptoAddLabel.setText(name + " added!");
+                cryptoAddLabel.setTextFill(Color.GREEN);
             }
-            //refreshCryptoList();
+            cryptoNameInput.setText("");
+            refreshCryptoList();
         });
         
         backToMainSceneButton.setOnAction(e -> {
+            cryptoAddLabel.setText("For now only name works");
+            cryptoNameInput.setText("");
             primaryStage.setScene(loggedInScene);
         });
         
@@ -224,11 +230,7 @@ public class CryptoUI extends Application {
         });
     }
     
-    @Override
-    public void stop() {
-        service.logout();
-        System.out.println("Bye!");
-    }
+    // ASSISTANCE METHODS
     
     public Node createCryptoNode(Cryptocurrency crypto) {
         HBox node = new HBox(10);
@@ -236,9 +238,16 @@ public class CryptoUI extends Application {
         Button button = new Button("Delete");
         button.setOnAction(e -> {
             service.deleteCryptocurrency(crypto);
-            //refreshCryptoList();
+            refreshCryptoList();
         });
+        Region nodeSpacer = new Region();
+        HBox.setHgrow(nodeSpacer, Priority.ALWAYS);
+        node.setPadding(new Insets(0, 5, 0, 5));
         
+        node.getChildren().addAll(label, nodeSpacer, button);
+        
+        
+        System.out.println("Luodaan node");
         return node;
     }
     
@@ -249,6 +258,19 @@ public class CryptoUI extends Application {
         cryptos.forEach(crypto -> {
             cryptoList.getChildren().add(createCryptoNode(crypto));
         });
+    }
+    
+    private void resetCryptoAddFields(TextField nameInput, TextField amountInput, TextField priceInput, TextField dateInput) {
+        nameInput.setText("");
+        amountInput.setText("");
+        priceInput.setText("");
+        dateInput.setText("");
+    }
+    
+    @Override
+    public void stop() {
+        service.logout();
+        System.out.println("Bye!");
     }
     
     public static void main(String[] args) {

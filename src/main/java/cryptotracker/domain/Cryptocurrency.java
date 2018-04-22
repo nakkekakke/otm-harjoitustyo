@@ -37,5 +37,13 @@ public class Cryptocurrency {
         return batches;
     }
     
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Cryptocurrency)) {
+            return false;
+        }
+        Cryptocurrency other = (Cryptocurrency) object;
+        return this.name.equals(other.getName());
+    }
     
 }

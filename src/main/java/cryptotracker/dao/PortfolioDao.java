@@ -84,6 +84,7 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
             stat.executeUpdate();
             
         } catch (SQLException e) {
+            System.out.println("SQLEXCEPTION AT save(Portfolio)");
             return null;
         }
         

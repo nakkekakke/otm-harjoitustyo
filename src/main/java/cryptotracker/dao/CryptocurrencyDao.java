@@ -83,6 +83,10 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
      */
     public List<Cryptocurrency> findAllInPortfolio(Portfolio portfolio) throws SQLException {
         List<Cryptocurrency> cryptos = new ArrayList<>();
+        if (portfolio == null) {
+            return cryptos;
+        }
+        
         try (Connection conn = database.getConnection();
                 PreparedStatement stat = 
                         conn.prepareStatement("SELECT * FROM Cryptocurrency WHERE Cryptocurrency.portfolio_id = " + portfolio.getId());
@@ -92,7 +96,7 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
                 Portfolio p = portfolioDao.findOneWithId(rs.getInt("portfolio_id"));
                 
                 if (p != null) {
-                    cryptos.add(new Cryptocurrency(rs.getInt("id"), rs.getString("username"), p));
+                    cryptos.add(new Cryptocurrency(rs.getInt("id"), rs.getString("name"), p));
                 }
             }
             
@@ -101,13 +105,16 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
         return cryptos;
     }
     
-    public Cryptocurrency findCryptocurrencyFromDatabase(Cryptocurrency crypto, Portfolio portfolio) throws SQLException {
-        for (Cryptocurrency c : findAllInPortfolio(portfolio)) {
-            if (c.equals(crypto)) {
-                return c;
+    public Cryptocurrency findOneInPortfolio(Cryptocurrency crypto, Portfolio portfolio) throws SQLException {
+        try {
+            for (Cryptocurrency c : findAllInPortfolio(portfolio)) {
+                if (c.equals(crypto)) {
+                    return c;
+                }
             }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-        
         return null;
     }
     
@@ -120,7 +127,7 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
      */ 
     public Cryptocurrency save(Cryptocurrency crypto, Portfolio portfolio) throws SQLException {
         
-        Cryptocurrency foundCrypto = findCryptocurrencyFromDatabase(crypto, portfolio);
+        Cryptocurrency foundCrypto = findOneInPortfolio(crypto, portfolio);
         
         if (foundCrypto != null) {
             return null;

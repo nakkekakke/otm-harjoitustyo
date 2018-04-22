@@ -57,29 +57,10 @@ public class CryptoService {
         this.activePortfolio = portfolio;
     }
     
-    /** Creates a new user if the username is not in use
-     * 
-     * @param username Username of the new user 
-     * @return True if username was available, false if user with the same username already exists
-     */     
-    public boolean createUser(String username) {
-        User user = new User(1, username);
-        try {
-            user = userDao.save(user);
-        } catch (SQLException e) {
-            return false;
-        }
-        
-        if (user == null) {
-            return false;
-        }
-        
-        if (createPortfolio(user) == false) {
-            System.out.println("Error while creating a portfolio!");
-            return false;
-        }
-        return true;
-    }
+    //
+    // GENERAL (USER)
+    //
+    
     
     /** Checks if the length of a username is valid
      * 
@@ -94,18 +75,7 @@ public class CryptoService {
         return false;
     }
     
-    public User findUserFromDatabase(User user) {
-        User foundUser;
-        
-        try {
-            foundUser = userDao.findOneWithUsername(user.getUsername());
-        } catch (SQLException e) {
-            return null;
-        }
-        
-        return foundUser;
-    }
-    
+ 
     /** Logs the user in
      * 
      * @param username The username used to log in
@@ -138,6 +108,52 @@ public class CryptoService {
         activePortfolio = null;
     }
     
+    //
+    // USER
+    //
+    
+    /** Creates a new user if the username is not in use
+     * 
+     * @param username Username of the new user 
+     * @return True if username was available, false if user with the same username already exists
+     */     
+    public boolean createUser(String username) {
+        User user = new User(1, username);
+        try {
+            user = userDao.save(user);
+        } catch (SQLException e) {
+            return false;
+        }
+        
+        if (user == null) {
+            return false;
+        }
+        
+        if (createPortfolio(user) == false) {
+            System.out.println("Error while creating a portfolio!");
+            return false;
+        }
+        return true;
+    }
+    
+    
+    public User findUserFromDatabase(User user) {
+        User foundUser;
+        
+        try {
+            foundUser = userDao.findOneWithUsername(user.getUsername());
+        } catch (SQLException e) {
+            return null;
+        }
+        
+        return foundUser;
+    }
+    
+    //
+    // PORTFOLIO
+    //
+    
+    
     /** Creates a new portfolio for a user; used when creating a new user
      * 
      * @param user The user for which a new portfolio will be created
@@ -154,11 +170,12 @@ public class CryptoService {
         try {
             portfolioDao.save(portfolio);
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             return false;
         }
         
         Portfolio p = findPortfolioFromDatabase(user);
-        if (p != null) {
+        if (p == null) {
             return false;
         }
         
@@ -174,20 +191,22 @@ public class CryptoService {
                 }
             }
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             return null;
         }
-        
         return null;
     }
     
-    public void addCryptoBatch(int id, String name, int amount, int totalPaid, String date) {
-        // under construction
-    }
+    //
+    // CRYPTOCURRENCY
+    //
     
     public Cryptocurrency createCryptocurrency(String name) {
         try {
-            return cryptoDao.save(new Cryptocurrency(1, name, activePortfolio), activePortfolio);
+            Cryptocurrency newCrypto = new Cryptocurrency(1, name, activePortfolio);
+            return cryptoDao.save(newCrypto, activePortfolio);
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -214,5 +233,13 @@ public class CryptoService {
         } catch (SQLException e) {
             return null;
         }
+    }
+    
+    //
+    // CRYPTOBATCH
+    //
+    
+    public void addCryptoBatch(int id, String name, int amount, int totalPaid, String date) {
+        // under construction
     }
 }
