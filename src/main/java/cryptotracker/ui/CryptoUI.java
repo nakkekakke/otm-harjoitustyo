@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -33,6 +35,7 @@ public class CryptoUI extends Application {
     private UserDao userDao;
     private PortfolioDao portfolioDao;
     private CryptocurrencyDao cryptoDao;
+    private CryptoBatchDao batchDao;
     private CryptoService service;
     
     private Scene loginScene;
@@ -64,7 +67,8 @@ public class CryptoUI extends Application {
         this.userDao = new UserDao(database);
         this.portfolioDao = new PortfolioDao(database, userDao);
         this.cryptoDao = new CryptocurrencyDao(database, portfolioDao);
-        this.service = new CryptoService(userDao, portfolioDao, cryptoDao);
+        this.batchDao = new CryptoBatchDao(database, cryptoDao);
+        this.service = new CryptoService(userDao, portfolioDao, cryptoDao, batchDao);
         this.menuLabel = new Label();
     }
     
@@ -191,7 +195,7 @@ public class CryptoUI extends Application {
         HBox.setHgrow(cryptoButtonSpacer, Priority.ALWAYS);
         cryptoAddButtons.getChildren().addAll(cryptoAddButton, cryptoButtonSpacer, backToMainSceneButton);
         
-        Label cryptoAddLabel = new Label("For now only name works");
+        Label cryptoAddLabel = new Label("Make sure to fill every field!");
         
         
         cryptoAddPane.getChildren().addAll(cryptoAddLabel, cryptoNamePane, cryptoAmountPane, cryptoPricePane, cryptoDatePane, cryptoAddButtons);
@@ -199,20 +203,49 @@ public class CryptoUI extends Application {
         
         cryptoAddButton.setOnAction(e -> {
             String name = cryptoNameInput.getText();
-            Cryptocurrency crypto = service.createCryptocurrency(name);
-            if (crypto == null) {
-                cryptoAddLabel.setText(name + " is already in your portfolio!");
+            String amount = cryptoAmountInput.getText();
+            String price = cryptoPriceInput.getText();
+            String date = cryptoDateInput.getText();
+            
+            Integer intAmount = tryParseInt(amount);
+            Integer intPrice = tryParseInt(price);
+            LocalDate parsedDate = tryParseDate(date);
+            
+            if (name.length() < 1 || name.length() > 50) {
+                cryptoAddLabel.setText("That's not a valid name...");
+                cryptoAddLabel.setTextFill(Color.RED);
+            } else if (isInteger(amount) == false || isInteger(price) == false) {
+                cryptoAddLabel.setText("Sorry, for now only integers are allowed!");
+                cryptoAddLabel.setTextFill(Color.RED);
+            } else if (intAmount == null || intAmount < 1) {
+                cryptoAddLabel.setText("Invalid amount value!");
+                cryptoAddLabel.setTextFill(Color.RED);
+            } else if (intPrice == null || intPrice < 1) {
+                cryptoAddLabel.setText("Invalid price value!");
+                cryptoAddLabel.setTextFill(Color.RED);
+            } else if (isValidDate(date) == false) {
+                cryptoAddLabel.setText("Invalid format of date!");
+                cryptoAddLabel.setTextFill(Color.RED);
+            } else if (parsedDate == null) {
+                cryptoAddLabel.setText("Invalid date value!");
                 cryptoAddLabel.setTextFill(Color.RED);
             } else {
-                cryptoAddLabel.setText(name + " added!");
-                cryptoAddLabel.setTextFill(Color.GREEN);
+                CryptoBatch newBatch = service.createCrypto(name, intAmount, intPrice, parsedDate);
+                if (newBatch == null) {
+                    cryptoAddLabel.setText("Adding a new batch of " + name + " failed! :O");
+                    cryptoAddLabel.setTextFill(Color.RED);
+                } else {
+                    cryptoAddLabel.setText("A new batch of " + name + " added!");
+                    cryptoAddLabel.setTextFill(Color.GREEN);
+                }
+                resetCryptoAddFields(cryptoNameInput, cryptoAmountInput, cryptoPriceInput, cryptoDateInput);
+                refreshCryptoList();
             }
-            cryptoNameInput.setText("");
-            refreshCryptoList();
         });
         
         backToMainSceneButton.setOnAction(e -> {
-            cryptoAddLabel.setText("For now only name works");
+            cryptoAddLabel.setText("Make sure to fill every field!");
+            cryptoAddLabel.setTextFill(Color.BLACK);
             cryptoNameInput.setText("");
             primaryStage.setScene(loggedInScene);
         });
@@ -266,6 +299,75 @@ public class CryptoUI extends Application {
         priceInput.setText("");
         dateInput.setText("");
     }
+
+    private boolean isInteger(String string) {
+        if (string.length() < 1) {
+            return false;
+        }
+        
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private Integer tryParseInt(String string) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    
+    private boolean isValidDate(String string) {
+        if (string.length() != 10) {
+            return false;
+        }
+        
+        for (int i = 0; i < 10; i++) {
+            char c = string.charAt(i);
+            
+            if (i != 4 && i != 7) {
+                if (!Character.isDigit(c)) {
+                    return false;
+                }
+            } else {
+                if (c != '-') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private LocalDate tryParseDate(String string) {
+        try {
+            return LocalDate.parse(string);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+    
+//    private void processNumberValues(String string) {
+//        int dotIndex = string.length();
+//        boolean hasNumberBeforeDot = true;
+//        boolean value = true;
+//        
+//        if (string.length() < 1) {
+//            return false;
+//        }
+//        
+//        for (int i = 0; i < string.length(); i++) {
+//            char c = string.charAt(i);
+//            if (Character.isDigit(c)) {
+//                
+//            }
+//        }
+//        
+//    }
     
     @Override
     public void stop() {

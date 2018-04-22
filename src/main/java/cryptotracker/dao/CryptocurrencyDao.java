@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
     
-    private final PortfolioDao portfolioDao;
     private final Database database;
+    private final PortfolioDao portfolioDao;
 
     public CryptocurrencyDao(Database database, PortfolioDao portfoliodao) {
         this.database = database;
@@ -33,6 +33,7 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
     public Cryptocurrency findOneWithId(Integer id) throws SQLException {
         ResultSet rs = null;
         Portfolio p = null;
+        Cryptocurrency crypto = null;
         try (Connection conn = database.getConnection(); 
              PreparedStatement stat = conn.prepareStatement("SELECT * FROM Cryptocurrency WHERE Cryptocurrency.id = " + id)) {
             
@@ -41,13 +42,12 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
                 p = portfolioDao.findOneWithId(rs.getInt("portfolio_id"));
             }
             if (p == null) {
-                System.out.println("An error occurred while finding portfolio");
                 return null;
             }
-            
+            crypto = new Cryptocurrency(id, rs.getString("name"), p);
         }
         
-        return new Cryptocurrency(id, rs.getString("name"), p);
+        return crypto;
     }
     
     /** Finds all instances of cryptocurrency stored in the database
@@ -105,6 +105,14 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
         return cryptos;
     }
     
+    
+    /** Finds a cryptocurrency from a portfolio
+     * 
+     * @param crypto The cryptocurrency to be found
+     * @param portfolio The portfolio from which a cryptocurrency will be searched
+     * @return The found cryptocurrency; null if the cryptocurrency wasn't found
+     * @throws java.sql.SQLException 
+     */
     public Cryptocurrency findOneInPortfolio(Cryptocurrency crypto, Portfolio portfolio) throws SQLException {
         try {
             for (Cryptocurrency c : findAllInPortfolio(portfolio)) {

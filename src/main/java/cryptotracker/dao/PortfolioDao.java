@@ -33,15 +33,13 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
     public Portfolio findOneWithId(Integer id) throws SQLException {
         Portfolio portfolio = null;
         try (Connection conn = database.getConnection();
-             PreparedStatement stat = conn.prepareStatement("SELECT * FROM Portfolio WHERE Portfolio.id = ?")) {
-
-            stat.setInt(1, id);
-            try (ResultSet rs = stat.executeQuery()) {
+             PreparedStatement stat = conn.prepareStatement("SELECT * FROM Portfolio WHERE Portfolio.id = " + id);
+             ResultSet rs = stat.executeQuery()) {
+            
                 if (rs.next()) {
                     User user = userDao.findOneWithId(rs.getInt("user_id"));
                     portfolio = new Portfolio(rs.getInt("id"), user);
                 }   
-            }
             
         }
         
@@ -69,6 +67,37 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         
         return portfolios;
     }
+
+    
+    /** Finds a portfolio belonging to a specified user
+     * 
+     * @param user The user whose portfolio will be searched for from the database
+     * @return The found cryptocurrency; null if the cryptocurrency wasn't found
+     * @throws java.sql.SQLException 
+     */
+    public Portfolio findOneWithUser(User user) throws SQLException {
+        Portfolio portfolio = null;
+        if (user == null) {
+            return portfolio;
+        }
+        
+        try (Connection conn = database.getConnection();
+                PreparedStatement stat = 
+                        conn.prepareStatement("SELECT * FROM Portfolio WHERE Portfolio.user_id = " + user.getId());
+                ResultSet rs = stat.executeQuery()) {
+            
+            if (rs.next()) {
+                User u = userDao.findOneWithId(rs.getInt("user_id"));
+                
+                if (u != null) {
+                    return new Portfolio(rs.getInt("id"), u);
+                }
+            }
+            
+        }
+        
+        return null;
+    }
     
     /** Adds a portfolio to the database 
      * 
@@ -84,7 +113,7 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
             stat.executeUpdate();
             
         } catch (SQLException e) {
-            System.out.println("SQLEXCEPTION AT save(Portfolio)");
+            System.out.println(e.getMessage());
             return null;
         }
         

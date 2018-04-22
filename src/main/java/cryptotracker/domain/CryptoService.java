@@ -3,7 +3,9 @@ package cryptotracker.domain;
 import cryptotracker.dao.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 /**  The class that handles the application logic
@@ -14,15 +16,17 @@ public class CryptoService {
     private final UserDao userDao;
     private final PortfolioDao portfolioDao;
     private final CryptocurrencyDao cryptoDao;
+    private final CryptoBatchDao batchDao;
     private int usernameMinLength;
     private int usernameMaxLength;
     private User loggedIn;
     private Portfolio activePortfolio;
     
-    public CryptoService(UserDao userDao, PortfolioDao portfolioDao, CryptocurrencyDao cryptoDao) {
+    public CryptoService(UserDao userDao, PortfolioDao portfolioDao, CryptocurrencyDao cryptoDao, CryptoBatchDao batchDao) {
         this.userDao = userDao;
         this.portfolioDao = portfolioDao;
         this.cryptoDao = cryptoDao;
+        this.batchDao = batchDao;
         this.usernameMinLength = 4;
         this.usernameMaxLength = 20;
         this.loggedIn = null;
@@ -95,7 +99,7 @@ public class CryptoService {
         
         loggedIn = user;
         
-        activePortfolio = findPortfolioFromDatabase(user);
+        activePortfolio = findPortfolio(user);
         
         return true;
     }
@@ -130,7 +134,6 @@ public class CryptoService {
         }
         
         if (createPortfolio(user) == false) {
-            System.out.println("Error while creating a portfolio!");
             return false;
         }
         return true;
@@ -174,7 +177,7 @@ public class CryptoService {
             return false;
         }
         
-        Portfolio p = findPortfolioFromDatabase(user);
+        Portfolio p = findPortfolio(user);
         if (p == null) {
             return false;
         }
@@ -183,25 +186,24 @@ public class CryptoService {
         return true;
     }
     
-    public Portfolio findPortfolioFromDatabase(User user) {
+    public Portfolio findPortfolio(User user) {
+        Portfolio p = null;
+        
         try {
-            for (Portfolio p : portfolioDao.findAll()) {
-                if (p.getUser().equals(user)) {
-                    return p;
-                }
-            }
+            p = portfolioDao.findOneWithUser(user);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return null;
         }
-        return null;
+        
+        return p;
     }
     
     //
     // CRYPTOCURRENCY
     //
     
-    public Cryptocurrency createCryptocurrency(String name) {
+    private Cryptocurrency createCryptoInstance(String name) {
+
         try {
             Cryptocurrency newCrypto = new Cryptocurrency(1, name, activePortfolio);
             return cryptoDao.save(newCrypto, activePortfolio);
@@ -215,6 +217,7 @@ public class CryptoService {
         for (Cryptocurrency c : getCryptosInPortfolio()) {
             if (c.equals(crypto)) {
                 try {
+                    deleteBatchesOfCrypto(c);
                     cryptoDao.delete(c.getId());
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
@@ -235,11 +238,56 @@ public class CryptoService {
         }
     }
     
+    private Cryptocurrency findCryptoByName(String name) {
+        for (Cryptocurrency c : getCryptosInPortfolio()) {
+            if (c.getName().equals(name)) {
+                return c;
+            }
+        }
+        
+        return null;
+    }
+    
     //
     // CRYPTOBATCH
     //
     
-    public void addCryptoBatch(int id, String name, int amount, int totalPaid, String date) {
-        // under construction
+    
+    public CryptoBatch createCrypto(String name, int amount, int totalPaid, LocalDate date) {
+        Cryptocurrency crypto = findCryptoByName(name);
+        if (crypto == null) {
+            crypto = createCryptoInstance(name);
+            if (crypto == null) {
+                return null;
+            }
+        }
+        
+        CryptoBatch newBatch = new CryptoBatch(1, amount, totalPaid, date, crypto);
+        try {
+            return batchDao.save(newBatch, crypto);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    
+    public List<CryptoBatch> getBatchesOfCrypto(Cryptocurrency crypto) {
+        List<CryptoBatch> batches = new ArrayList<>();
+        try {
+            batches = batchDao.findAllFromCryptocurrency(crypto);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return batches;
+    }
+    
+    private void deleteBatchesOfCrypto(Cryptocurrency crypto) {
+        getBatchesOfCrypto(crypto).forEach((batch) -> {
+            try {
+                batchDao.delete(batch.getId());
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        });
     }
 }

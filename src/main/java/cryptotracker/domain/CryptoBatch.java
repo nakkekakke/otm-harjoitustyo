@@ -9,25 +9,21 @@ import java.time.LocalDate;
 public class CryptoBatch {
     
     private int id;
-    private Cryptocurrency crypto;
     private int amount;
     private int totalPaid;
     private LocalDate date;
+    private Cryptocurrency crypto;
     
-    public CryptoBatch(int id, Cryptocurrency crypto, int amount, int totalPaid, LocalDate date) {
+    public CryptoBatch(int id, int amount, int totalPaid, LocalDate date, Cryptocurrency crypto) {
         this.id = id;
-        this.crypto = crypto;
         this.amount = amount;
         this.totalPaid = totalPaid; // in euro cents, for example
         this.date = date;
+        this.crypto = crypto;
     }
     
     public int getId() {
         return id;
-    }
-
-    public Cryptocurrency getCrypto() {
-        return crypto;
     }
 
     public int getAmount() {
@@ -40,6 +36,10 @@ public class CryptoBatch {
 
     public LocalDate getDate() {
         return date;
+    }
+    
+    public Cryptocurrency getCrypto() {
+        return crypto;
     }
     
     public double getExchangeRate() {

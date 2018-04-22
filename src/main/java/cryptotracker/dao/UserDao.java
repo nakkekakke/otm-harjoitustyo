@@ -119,8 +119,8 @@ public class UserDao implements Dao<User, Integer> {
     public void delete(Integer id) throws SQLException {
         try (Connection conn = database.getConnection(); 
              PreparedStatement stat = conn.prepareStatement("DELETE FROM User WHERE User.id = ?")) {
-            stat.setInt(1, id);
             
+            stat.setInt(1, id);
             stat.executeUpdate();
             
         }

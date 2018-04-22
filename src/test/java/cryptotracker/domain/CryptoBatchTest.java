@@ -22,7 +22,7 @@ public class CryptoBatchTest {
         int testTotalPaid = 10000;
         LocalDate testDate = LocalDate.parse("2018-01-01");
         
-        this.testBatch = new CryptoBatch(33, assistanceCrypto, testAmount, testTotalPaid, testDate);
+        this.testBatch = new CryptoBatch(33, testAmount, testTotalPaid, testDate, assistanceCrypto);
         
     }
     
@@ -61,7 +61,7 @@ public class CryptoBatchTest {
         User user = new User(1, "lol");
         Portfolio p = new Portfolio(1, user);
         Cryptocurrency crypto = new Cryptocurrency(1, "Ethereum", p);
-        Object o = new CryptoBatch(33, crypto, 1, 10, LocalDate.parse("2016-06-21"));
+        Object o = new CryptoBatch(33, 1, 10, LocalDate.parse("2016-06-21"), crypto);
         
         assertEquals(o, testBatch);
     }
