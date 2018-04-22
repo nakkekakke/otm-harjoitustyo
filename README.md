@@ -27,3 +27,13 @@ mvn jacoco:report
 ```
 
 Tätä kattavuusraporttia voi tarkastella avaamalla selaimella repositorion juuresta löytyvän tiedoston _target/site/jacoco/index.html_
+
+### Checkstyle
+
+Tiedostoon [checkstyle.xml](https://github.com/nakkekakke/CryptoTracker/blob/master/checkstyle.xml) määritellyt tarkistukset suoritetaan komennolla
+
+```
+ mvn jxr:jxr checkstyle:checkstyle
+```
+
+Voit tarkastella Checkstyle-raporttia avaamalla selaimella repositorion juuresta löytyvän tiedoston _target/site/checkstyle.html_
