@@ -17,4 +17,4 @@
 |       | 6 h  | Debuggailua, lisää dao-toiminnallisuuksia |
 | 20.4. | 5 h  | Refaktorointia, CryptoServicen siistimistä, lisää käyttöliittymää |
 | 22.4. | 6 h  | CryptoBatchDao, batchien lisääminen ja poistaminen UI:n kautta, bugien metsästystä |
-| yht.  | 44 h |  | 
+| yht.  | 55 h |  | 
