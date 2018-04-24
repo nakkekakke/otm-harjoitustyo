@@ -42,7 +42,19 @@ public class UserTest {
     
     @Test
     public void equalsFailsIfObjectsDifferentTypes() {
-        Object o = new String();
-        assertFalse(testUser.equals(o));
+        Object stringObject = new String();
+        assertFalse(testUser.equals(stringObject));
+    }
+    
+    @Test
+    public void equalsFailsIfObjectIsNull() {
+        User user = null;
+        assertFalse(testUser.equals(user));
+    }
+    
+    @Test
+    public void hashCodeTest() {
+        User user = new User(1, "test");
+        assertEquals(user.hashCode(), 3560224);
     }
 }

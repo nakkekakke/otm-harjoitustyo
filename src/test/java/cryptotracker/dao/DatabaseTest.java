@@ -12,11 +12,13 @@ public class DatabaseTest {
     
     File testFile;
     Database database;
+    Connection conn;
 
     @Before
-    public void setUp() throws ClassNotFoundException {
+    public void setUp() throws ClassNotFoundException, SQLException {
         this.testFile = new File("db/databaseTest.db");
         initializeDatabase(testFile.getPath());
+        
     }
 
     @After
@@ -24,14 +26,34 @@ public class DatabaseTest {
         testFile.delete();
     }
     
-    private void initializeDatabase(String testAddress) throws ClassNotFoundException {
+    private void initializeDatabase(String testAddress) throws ClassNotFoundException, SQLException {
         this.database = new Database("jdbc:sqlite:" + testAddress);
+        this.conn = database.getConnection();
     }
 
     @Test
     public void connectionCanBeEstablished() throws SQLException {
-        Connection conn = database.getConnection();
         assertFalse(conn.isClosed());
+    }
+    
+    @Test
+    public void initializeTablesWorks() throws SQLException {
+        database.initializeTables();
+//        PreparedStatement stat = conn.prepareStatement(".schema CryptoBatch");
+//        ResultSet rs = stat.executeQuery();
+//        assertTrue(rs.next());
+//        
+//        stat = conn.prepareStatement(".schema Cryptocurrency");
+//        rs = stat.executeQuery();
+//        assertTrue(rs.next());
+//        
+//        stat = conn.prepareStatement(".schema Portfolio");
+//        rs = stat.executeQuery();
+//        assertTrue(rs.next());
+//        
+//        stat = conn.prepareStatement(".schema User");
+//        rs = stat.executeQuery();
+//        assertTrue(rs.next());
     }
 
 }

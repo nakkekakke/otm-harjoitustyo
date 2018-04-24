@@ -37,6 +37,8 @@ public class UserDao implements Dao<User, Integer> {
                 if (rs.next()) {
                     user = new User(rs.getInt("id"), rs.getString("username"));
                 }
+            } catch (Exception e) {
+                return null;
             }
             
         }
@@ -60,6 +62,8 @@ public class UserDao implements Dao<User, Integer> {
                 if (rs.next()) {
                     user = new User(rs.getInt("id"), rs.getString("username"));
                 }
+            } catch (Exception e) {
+                return null;
             }
             
         }

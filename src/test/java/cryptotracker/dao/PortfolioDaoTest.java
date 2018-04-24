@@ -1,5 +1,6 @@
 package cryptotracker.dao;
 
+import cryptotracker.domain.Portfolio;
 import cryptotracker.domain.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,19 +24,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserDaoTest {
+public class PortfolioDaoTest {
     
-//    @Rule
-//    public TemporaryFolder testFolder = new TemporaryFolder();
-        
     @InjectMocks
-    UserDao userDao;
+    PortfolioDao portfolioDao;
     
     @Mock
     Database database;
@@ -48,14 +47,13 @@ public class UserDaoTest {
     
     @Mock
     ResultSet rs;
-
-    User testUser;
     
-//    @BeforeClass
-//    public void initialize() {
-//        userDao = new UserDao(database);
-//        testUser = new User(20, "testUsername");
-//    }
+    @Mock
+    UserDao userDao;
+    
+    @Mock
+    User testUser;
+
 
     @Before
     public void setUp() throws SQLException {
@@ -63,136 +61,147 @@ public class UserDaoTest {
         when(database.getConnection()).thenReturn(conn);
         when(conn.prepareStatement(any(String.class))).thenReturn(stat);
         when(stat.executeQuery()).thenReturn(rs);
-        userDao = new UserDao(database);
-        testUser = new User(20, "testUsername");
-    }
-    
-//    @Test
-//    public void saveWorks() throws SQLException {
-//        userDao.save(testUser);
-//        verify(stat).setString(1, "testUsername");
-//        verify(stat).setString(1, "testUsername");
-//    }
-    
-    @Test
-    public void findOneWithIdStatementWorksCorrectly() throws SQLException {
-        userDao.findOneWithId(82);
-        
-        InOrder inOrder = inOrder(stat);
-        inOrder.verify(stat).setInt(1, 82);
-        inOrder.verify(stat).executeQuery();
-        inOrder.verify(stat).close();
-        inOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void findOneWithIdIfResultSetIsEmptyDontGetAnything() throws SQLException {
-        userDao.findOneWithId(111);
-        
-        InOrder inOrder = inOrder(rs);
-        inOrder.verify(rs).next();
-        inOrder.verify(rs, never()).getInt(any(String.class));
-        inOrder.verify(rs, never()).getString(any(String.class));
-        inOrder.verify(rs).close();
-        inOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void findOneWithIdIfResultSetHasStuffThenGetIt() throws SQLException {
-        when(rs.next()).thenReturn(true);
-        userDao.findOneWithId(20);
-        
-        InOrder inOrder = inOrder(rs);
-        inOrder.verify(rs).next();
-        inOrder.verify(rs).getInt(any(String.class));
-        inOrder.verify(rs).getString(any(String.class));
-        inOrder.verify(rs).close();
-        inOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void findOneWithUsernameStatementWorksCorrectly() throws SQLException {
-        userDao.findOneWithUsername("someName");
-        
-        InOrder inOrder = inOrder(stat);
-        inOrder.verify(stat).setString(1, "someName");
-        inOrder.verify(stat).executeQuery();
-        inOrder.verify(stat).close();
-        inOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void findOneWithUsernameIfResultSetIsEmptyDontGetAnything() throws SQLException {
-        when(rs.next()).thenReturn(false);
-        userDao.findOneWithUsername("yetAnotherName");
-        
-        InOrder inOrder = inOrder(rs);
-        inOrder.verify(rs).next();
-        inOrder.verify(rs, never()).getInt(any(String.class));
-        inOrder.verify(rs, never()).getString(any(String.class));
-        inOrder.verify(rs).close();
-        inOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void findOneWithUsernameIfResultSetHasStuffThenGetIt() throws SQLException {
-        when(rs.next()).thenReturn(true);
-        userDao.findOneWithUsername("yetAnotherName");
-        
-        InOrder inOrder = inOrder(rs);
-        inOrder.verify(rs).next();
-        inOrder.verify(rs).getInt(any(String.class));
-        inOrder.verify(rs).getString(any(String.class));
-        inOrder.verify(rs).close();
-        inOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void findAllStatementWorksCorrectly() throws SQLException {
-        userDao.findAll();
-        
-        InOrder inOrder = inOrder(stat);
-        inOrder.verify(stat).executeQuery();
-        inOrder.verify(stat).close();
-        inOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void findAllResultSetWorksCorrectly() throws SQLException {
-        when(rs.next()).thenReturn(true).thenReturn(false);
-        assertEquals(userDao.findAll().getClass().getName(), "java.util.ArrayList");
-        
-        InOrder inOrder = inOrder(rs);
-        inOrder.verify(rs).next();
-        inOrder.verify(rs).getInt(any(String.class));
-        inOrder.verify(rs).getString(any(String.class));
-        inOrder.verify(rs).next();
-        inOrder.verify(rs, never()).getInt(any(String.class));
-        inOrder.verify(rs, never()).getString(any(String.class));
-        inOrder.verify(rs).close();
-        inOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void saveWorksCorrectly() throws SQLException {
-        userDao.save(testUser);
-        
-        InOrder inOrder = inOrder(stat);
-        inOrder.verify(stat).setString(1, testUser.getUsername());
-        inOrder.verify(stat).executeUpdate();
-        inOrder.verify(stat).close();
-        inOrder.verifyNoMoreInteractions();
+//        portfolioDao = new PortfolioDao(database, userDao);
     }
 
     @Test
-    public void deleteStatementWorksCorrectly() throws SQLException {
-        userDao.delete(20);
+    public void findOneWithIdStatementWorksCorrectly() throws SQLException {
+        portfolioDao.findOneWithId(45);
         
         InOrder inOrder = inOrder(stat);
-        inOrder.verify(stat).setInt(1, 20);
+        inOrder.verify(stat).setInt(1, 45);
+        inOrder.verify(stat).executeQuery();
+        inOrder.verify(stat).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+     
+    @Test
+    public void findOneWithIdIfResultSetHasStuffThenGetIt() throws SQLException {
+        when(rs.next()).thenReturn(true);
+        portfolioDao.findOneWithId(111);
+        
+        InOrder inOrder = inOrder(rs);
+        inOrder.verify(rs).next();
+        inOrder.verify(rs, times(2)).getInt(any(String.class));
+        inOrder.verify(rs).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+    
+    @Test
+    public void findOneWithIdIfResultSetEmptyDontGetAnything() throws SQLException {
+        when(rs.next()).thenReturn(false);
+        portfolioDao.findOneWithId(111);
+        
+        InOrder inOrder = inOrder(rs);
+        inOrder.verify(rs).next();
+        inOrder.verify(rs, never()).getInt(any(String.class));
+        inOrder.verify(rs).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+     
+    @Test
+    public void findAllStatementWorksCorrectly() throws SQLException {
+        portfolioDao.findAll();
+        
+        InOrder inOrder = inOrder(stat);
+        inOrder.verify(stat).executeQuery();
+        inOrder.verify(stat).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+     
+    @Test
+    public void findAllResultSetWorksCorrectly() throws SQLException {
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        portfolioDao.findAll();
+         
+        InOrder inOrder = inOrder(rs); 
+        inOrder.verify(rs).next();
+        inOrder.verify(rs, times(2)).getInt(any(String.class));
+        inOrder.verify(rs).next();
+        inOrder.verify(rs, never()).getInt(any(String.class));
+        inOrder.verify(rs).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+    
+    @Test
+    public void findOneWithUserStatementWorksCorrectly() throws SQLException {
+//        User testUser = new User(95, "test");
+        portfolioDao.findOneWithUser(testUser);
+        
+        InOrder inOrder = inOrder(stat);
+        inOrder.verify(stat).setInt(1, testUser.getId());
+        inOrder.verify(stat).executeQuery();
+        inOrder.verify(stat).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+    
+    @Test
+    public void findOneWithUserIfResultSetHasStuffThenGetIt() throws SQLException {
+        when(rs.next()).thenReturn(true);
+        portfolioDao.findOneWithUser(testUser);
+        
+        InOrder inOrder = inOrder(rs);
+        inOrder.verify(rs).next();
+        inOrder.verify(rs).getInt(any(String.class));
+        inOrder.verify(rs).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+    
+    @Test
+    public void findOneWithUserIfResultSetEmptyDontGetAnything() throws SQLException {
+        when(rs.next()).thenReturn(false);
+        portfolioDao.findOneWithUser(testUser);
+        
+        InOrder inOrder = inOrder(rs);
+        inOrder.verify(rs).next();
+        inOrder.verify(rs, never()).getInt(any(String.class));
+        inOrder.verify(rs).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+    
+    @Test
+    public void findOneWithUserReturnsNullIfParameterNull() throws SQLException {
+        testUser = null;
+        Portfolio p = portfolioDao.findOneWithUser(testUser);
+        assertEquals(p, null);
+    }
+    
+    @Test
+    public void saveStatementWorksCorrectly() throws SQLException {
+        portfolioDao.save(new Portfolio(10, testUser));
+        
+        InOrder inOrder = inOrder(stat);
+        inOrder.verify(stat).setInt(1, testUser.getId());
         inOrder.verify(stat).executeUpdate();
         inOrder.verify(stat).close();
         inOrder.verifyNoMoreInteractions();
     }
+    
+    @Test
+    public void saveReturnsParameterPortfolio() throws SQLException {
+        Portfolio savedFolio = new Portfolio(5, testUser);
+        Portfolio returnFolio = portfolioDao.save(savedFolio);
+        assertEquals(savedFolio, returnFolio);
+    }
+    
+    @Test
+    public void saveReturnsNullWhenThrowsException() throws SQLException {
+        when(stat.executeUpdate()).thenThrow(new SQLException());
+        Portfolio p = portfolioDao.save(new Portfolio(14, testUser));
+        assertEquals(p, null);
+    }
+    
+    @Test
+    public void deleteStatementWorksCorrectly() throws SQLException {
+        portfolioDao.delete(16);
+        
+        InOrder inOrder = inOrder(stat);
+        inOrder.verify(stat).setInt(1, 16);
+        inOrder.verify(stat).executeUpdate();
+        inOrder.verify(stat).close();
+        inOrder.verifyNoMoreInteractions();
+    }
+    
+
 
 }

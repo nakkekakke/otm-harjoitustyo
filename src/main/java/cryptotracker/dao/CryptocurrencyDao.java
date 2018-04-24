@@ -35,8 +35,9 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
         Portfolio p = null;
         Cryptocurrency crypto = null;
         try (Connection conn = database.getConnection(); 
-             PreparedStatement stat = conn.prepareStatement("SELECT * FROM Cryptocurrency WHERE Cryptocurrency.id = " + id)) {
+             PreparedStatement stat = conn.prepareStatement("SELECT * FROM Cryptocurrency WHERE Cryptocurrency.id = ?")) {
             
+            stat.setInt(1, id);
             rs = stat.executeQuery();
             if (rs.next()) {
                 p = portfolioDao.findOneWithId(rs.getInt("portfolio_id"));
