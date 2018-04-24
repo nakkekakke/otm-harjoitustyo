@@ -37,3 +37,17 @@ Tiedostoon [checkstyle.xml](https://github.com/nakkekakke/CryptoTracker/blob/mas
 ```
 
 Voit tarkastella Checkstyle-raporttia avaamalla selaimella repositorion juuresta löytyvän tiedoston _target/site/checkstyle.html_
+
+### Suoritettavan jarin generointi
+
+Jar-tiedosto generoidaan komennolla
+
+```
+mvn package
+```
+
+Syntynyt jar-tiedosto _CryptoTracker-1.0-SNAPSHOT.jar_ löytyy kansiosta _target_. HUOM! Sovellus on riippuvainen repositorion juuresta löytyvästä tiedostosta config.properties! Tiedoston täytyy siis olla samassa kansiossa kuin suoritettava jar-tiedosto. Voit esimerkiksi siirtää jar-tiedoston repositorion juureen komennolla
+
+```
+mv CryptoTracker-1.0-SNAPSHOT.jar ..
+```
