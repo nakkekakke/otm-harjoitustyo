@@ -42,7 +42,7 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
                     User user = userDao.findOneWithId(rs.getInt("user_id"));
                     portfolio = new Portfolio(rs.getInt("id"), user);
                 }
-             }    
+            }    
             
         }
         
