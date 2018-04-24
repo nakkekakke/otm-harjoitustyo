@@ -15,7 +15,7 @@ import java.util.List;
 /** The class for communication between cryptobatches and the database
  * 
  */
-public class CryptoBatchDao implements Dao<CryptoBatch, Integer>{
+public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
     
     private final Database database;
     private final CryptocurrencyDao cryptoDao;
