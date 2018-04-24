@@ -1,6 +1,6 @@
 # CryptoTracker
 
-Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti. **Tällä hetkellä sovellukseen voi rekisteröityä, kirjautua sisään ja ulos, lisätä kryptovaluuttoja ja ostoeriä.** Sovellus on englanninkielinen.
+Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti. **Tällä hetkellä sovellukseen voi rekisteröityä, kirjautua sisään ja ulos, lisätä kryptovaluuttoja ja ostoeriä. Sovelluksen kautta ostoeriä ei vielä näe, mutta ne tallentuvat paikalliseen tietokantaan** Sovellus on englanninkielinen.
 
 ## Dokumentaatio
 
@@ -51,3 +51,7 @@ Syntynyt jar-tiedosto _CryptoTracker-1.0-SNAPSHOT.jar_ löytyy kansiosta _target
 ```
 mv CryptoTracker-1.0-SNAPSHOT.jar ..
 ```
+
+### Releases
+
+[Viikko 5](https://github.com/nakkekakke/CryptoTracker/releases/tag/v0.1)
