@@ -10,8 +10,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -38,12 +36,16 @@ public class CryptoUI extends Application {
     private CryptoBatchDao batchDao;
     private CryptoService service;
     
+    private Stage primaryStage;
+    
     private Scene loginScene;
     private Scene loggedInScene;
     private Scene cryptoAddScene;
+    private Scene batchScene;
     
     
     private VBox cryptoList;
+    private VBox batchList;
     private Label menuLabel;
     
     
@@ -73,8 +75,10 @@ public class CryptoUI extends Application {
     }
     
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage stage) throws Exception {
         // LOGIN SCENE
+        
+        this.primaryStage = stage;
         
         VBox loginPane = new VBox(10);
         HBox inputPane = new HBox(10);
@@ -139,7 +143,7 @@ public class CryptoUI extends Application {
         menuPane.getChildren().addAll(menuLabel, menuSpacer, addCryptoSceneButton, logoutButton);
         
         cryptoList = new VBox(10);
-        cryptoList.setMaxWidth(280);
+        cryptoList.setMaxWidth(1000);
         cryptoList.setMinWidth(280);
         refreshCryptoList();
         
@@ -164,7 +168,7 @@ public class CryptoUI extends Application {
         
         HBox cryptoNamePane = new HBox(10);
         cryptoNamePane.setPadding(new Insets(10));
-        Label cryptoNameLabel = new Label("Enter the name of the crypto");
+        Label cryptoNameLabel = new Label("The name of the crypto");
         TextField cryptoNameInput = new TextField();
         cryptoNameInput.setPrefWidth(100);
         cryptoNamePane.getChildren().addAll(cryptoNameLabel, cryptoNameInput);
@@ -177,7 +181,7 @@ public class CryptoUI extends Application {
         
         HBox cryptoPricePane = new HBox(10);
         cryptoPricePane.setPadding(new Insets(10));
-        Label cryptoPriceLabel = new Label("Price paid");
+        Label cryptoPriceLabel = new Label("Price paid (€)");
         TextField cryptoPriceInput = new TextField();
         cryptoPricePane.getChildren().addAll(cryptoPriceLabel, cryptoPriceInput);
         
@@ -253,6 +257,31 @@ public class CryptoUI extends Application {
         cryptoAddScene = new Scene(cryptoAddPane, 500, 300);
         
         
+        // CRYPTO BATCH SCENE
+        
+        
+        ScrollPane batchScrollPane = new ScrollPane();
+        BorderPane batchPane = new BorderPane(batchScrollPane);
+        
+        HBox batchMenuPane = new HBox(10);
+        Region batchMenuSpacer = new Region();
+        HBox.setHgrow(batchMenuSpacer, Priority.ALWAYS);
+        Button fromBatchToMainButton = new Button("Go back");
+        batchMenuPane.getChildren().addAll(batchMenuSpacer, fromBatchToMainButton);
+        
+        batchList = new VBox(10);
+        batchList.setMaxWidth(280);
+        batchList.setMinWidth(280);
+        
+        batchScrollPane.setContent(batchList);
+        batchPane.setTop(batchMenuPane);
+        
+        fromBatchToMainButton.setOnAction(e -> {
+            primaryStage.setScene(loggedInScene);
+        });
+        
+        batchScene = new Scene(batchPane, 500, 300);
+        
         // SETUP
         
         primaryStage.setTitle("CryptoTracker");
@@ -266,10 +295,17 @@ public class CryptoUI extends Application {
     // ASSISTANCE METHODS
     
     public Node createCryptoNode(Cryptocurrency crypto) {
-        HBox node = new HBox(10);
+        HBox node = new HBox(20);
         Label label = new Label(crypto.getName());
-        Button button = new Button("Delete");
-        button.setOnAction(e -> {
+        Button batchButton = new Button("See batches");
+        Button deleteButton = new Button("Delete crypto");
+        
+        batchButton.setOnAction(e -> {
+            refreshBatchList(crypto);
+            primaryStage.setScene(batchScene);
+        });
+        
+        deleteButton.setOnAction(e -> {
             service.deleteCryptocurrency(crypto);
             refreshCryptoList();
         });
@@ -277,7 +313,7 @@ public class CryptoUI extends Application {
         HBox.setHgrow(nodeSpacer, Priority.ALWAYS);
         node.setPadding(new Insets(0, 5, 0, 5));
         
-        node.getChildren().addAll(label, nodeSpacer, button);
+        node.getChildren().addAll(label, nodeSpacer, batchButton, deleteButton);
         
         
         System.out.println("Luodaan node");
@@ -291,6 +327,54 @@ public class CryptoUI extends Application {
         cryptos.forEach(crypto -> {
             cryptoList.getChildren().add(createCryptoNode(crypto));
         });
+    }
+    
+    public Node createBatchNode(CryptoBatch batch) {
+        VBox node = new VBox(20);
+        HBox dateNode = new HBox(10);
+        HBox amountNode = new HBox(10);
+        HBox priceNode = new HBox(10);
+        
+        Label dateLabel = new Label("Date of purchase:");
+        Label date = new Label(batch.getDate().toString());
+        Label amountLabel = new Label("Amount:");
+        Label amount = new Label(String.valueOf(batch.getAmount()));
+        Label priceLabel = new Label("Price paid:");
+        Label price = new Label(String.valueOf(batch.getTotalPaid()) + " €");
+        Button deleteButton = new Button("Delete batch");
+        
+        deleteButton.setOnAction(e -> {
+            service.deleteBatch(batch.getId());
+            refreshBatchList(batch.getCrypto());
+        });
+        
+        dateNode.getChildren().addAll(dateLabel, date);
+        amountNode.getChildren().addAll(amountLabel, amount);
+        priceNode.getChildren().addAll(priceLabel, price);
+        node.setPadding(new Insets(5, 5, 5, 0));
+        
+        String layout = "-fx-border-style: hidden hidden solid hidden;\n" +
+                "-fx-border-color: black;\n" +
+                "-fx-border-width: 1;";
+        node.setStyle(layout);
+        
+        node.getChildren().addAll(dateNode, amountNode, priceNode, deleteButton);
+        return node;
+    }
+    
+    private void refreshBatchList(Cryptocurrency crypto) {
+        batchList.getChildren().clear();
+        
+        List<CryptoBatch> batches = service.getBatchesOfCrypto(crypto);
+        
+        if (!batches.isEmpty()) {
+            batches.forEach(batch -> {
+                batchList.getChildren().add(createBatchNode(batch));
+            });
+        } else {
+            service.deleteCryptocurrency(crypto);
+            refreshCryptoList();
+        }
     }
     
     private void resetCryptoAddFields(TextField nameInput, TextField amountInput, TextField priceInput, TextField dateInput) {

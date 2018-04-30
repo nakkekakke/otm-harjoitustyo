@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**  The class that handles the application logic
@@ -206,7 +205,8 @@ public class CryptoService {
 
         try {
             Cryptocurrency newCrypto = new Cryptocurrency(1, name, activePortfolio);
-            return cryptoDao.save(newCrypto, activePortfolio);
+            cryptoDao.save(newCrypto, activePortfolio);
+            return findCryptoByName(name);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
@@ -283,11 +283,15 @@ public class CryptoService {
     
     private void deleteBatchesOfCrypto(Cryptocurrency crypto) {
         getBatchesOfCrypto(crypto).forEach((batch) -> {
-            try {
-                batchDao.delete(batch.getId());
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
+            deleteBatch(batch.getId());
         });
+    }
+    
+    public void deleteBatch(Integer id) {
+        try {
+            batchDao.delete(id);
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
     }
 }
