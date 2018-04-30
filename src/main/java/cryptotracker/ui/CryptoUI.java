@@ -314,9 +314,6 @@ public class CryptoUI extends Application {
         node.setPadding(new Insets(0, 5, 0, 5));
         
         node.getChildren().addAll(label, nodeSpacer, batchButton, deleteButton);
-        
-        
-        System.out.println("Luodaan node");
         return node;
     }
     
