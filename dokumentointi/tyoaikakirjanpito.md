@@ -19,4 +19,6 @@
 | 22.4. | 6 h  | CryptoBatchDao, batchien lisääminen ja poistaminen UI:n kautta, bugien metsästystä |
 | 24.4. | 7 h  | Testejä, Mockiton opettelua |
 |       | 2 h  | Release, jar, sekvenssikaavio ym. viikon tavoitteet |
+| 27.4. | 1 h  | CryptoBatch-toiminnallisuutta käyttöliittymään |
+| 30.4. | 2 h  | CryptoBatch-perustoiminnallisuudet valmiit |
 | yht.  | 64 h |  | 
