@@ -21,4 +21,4 @@
 |       | 2 h  | Release, jar, sekvenssikaavio ym. viikon tavoitteet |
 | 27.4. | 1 h  | CryptoBatch-toiminnallisuutta käyttöliittymään |
 | 30.4. | 2 h  | CryptoBatch-perustoiminnallisuudet valmiit |
-| yht.  | 64 h |  | 
+| yht.  | 67 h |  | 
