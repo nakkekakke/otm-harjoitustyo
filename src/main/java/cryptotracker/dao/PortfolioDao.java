@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** The class for communication between portfolios and the database
+/** The class for handling portfolios between the service class and the database.
  * 
  */
 public class PortfolioDao implements Dao<Portfolio, Integer> {
@@ -23,10 +23,10 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         this.userDao = userDao;
     }
 
-    /** Finds a portfolio by id
+    /** Finds a portfolio from the database, using a unique id.
      * 
-     * @param id The id of a portfolio
-     * @return A portfolio, if any with the specified id was found; null if nothing was found
+     * @param id The id associated with the wanted portfolio.
+     * @return The found portfolio, or null if nothing was found.
      * @throws java.sql.SQLException
      */    
     @Override
@@ -49,9 +49,9 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         return portfolio;
     }    
     
-    /** Finds all portfolios stored in the database
+    /** Finds all portfolios stored in the database.
      * 
-     * @return A list containing every portfolio found in the database; an empty list if nothing was found
+     * @return A list containing every portfolio found in the database; an empty list if nothing was found.
      * @throws java.sql.SQLException
      */ 
     @Override
@@ -72,10 +72,10 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
     }
 
     
-    /** Finds a portfolio belonging to a specified user
+    /** Finds a portfolio belonging to a specified user.
      * 
-     * @param user The user whose portfolio will be searched for from the database
-     * @return The found cryptocurrency; null if the cryptocurrency wasn't found
+     * @param user The user whose portfolio will be searched for from the database.
+     * @return The found cryptocurrency; null if the cryptocurrency wasn't found.
      * @throws java.sql.SQLException 
      */
     public Portfolio findOneWithUser(User user) throws SQLException {
@@ -103,10 +103,10 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
         return null;
     }
     
-    /** Adds a portfolio to the database 
+    /** Adds a portfolio to the database.
      * 
-     * @param portfolio The portfolio that will be saved to the database
-     * @return The saved portfolio; null if an error occurred
+     * @param portfolio The portfolio that will be saved to the database.
+     * @return The saved portfolio; null if an exception occurred.
      * @throws java.sql.SQLException
      */ 
     public Portfolio save(Portfolio portfolio) throws SQLException {        
@@ -117,16 +117,15 @@ public class PortfolioDao implements Dao<Portfolio, Integer> {
             stat.executeUpdate();
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
             return null;
         }
         
         return portfolio;
     }
     
-    /** Deletes a portfolio from the database using the id of the portfolio
+    /** Deletes a portfolio from the database, using a unique id.
      * 
-     * @param id The id of the portfolio that is to be deleted
+     * @param id The id of the portfolio that will be deleted.
      * @throws java.sql.SQLException
      */ 
     @Override

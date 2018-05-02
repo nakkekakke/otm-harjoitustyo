@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** The class for communication between users and the database
+/** The class for handling users between the service class and the database.
  * 
  */
 public class UserDao implements Dao<User, Integer> {
@@ -20,10 +20,10 @@ public class UserDao implements Dao<User, Integer> {
         this.database = database;
     }
     
-    /** Finds an user by id
+    /** Finds an user from the database, using a unique id.
      * 
-     * @param id The id associated with a user
-     * @return User, if any with the specified id was found; null if no user was found
+     * @param id The id associated with the wanted user.
+     * @return The found user. Null if nothing was found.
      * @throws java.sql.SQLException
      */    
     @Override
@@ -46,10 +46,10 @@ public class UserDao implements Dao<User, Integer> {
         return user;
     }
     
-    /** Finds an user by username 
+    /** Finds an user from the database, using a unique username.
      * 
-     * @param username Username associated with a user
-     * @return User, if any with the specified username was found; null if no user was found
+     * @param username The username of the wanted user.
+     * @return The found user, or null if nothing was found.
      * @throws java.sql.SQLException
      */    
     public User findOneWithUsername(String username) throws SQLException {
@@ -73,7 +73,7 @@ public class UserDao implements Dao<User, Integer> {
     
     /** Finds all users stored in the database
      * 
-     * @return A list containing every user found in the database, an empty list if nothing was found
+     * @return A list containing every user found in the database. An empty list if nothing was found
      * @throws java.sql.SQLException
      */ 
     @Override
@@ -92,10 +92,10 @@ public class UserDao implements Dao<User, Integer> {
         return users;
     }
     
-    /** Adds a user to the database 
+    /** Adds a user to the database .
      * 
-     * @param user The user that will be added to the database
-     * @return The added user, or null if nothing was added
+     * @param user The user that will be added to the database.
+     * @return The added user, or null if that user already exists.
      * @throws java.sql.SQLException
      */ 
     public User save(User user) throws SQLException {
@@ -114,9 +114,9 @@ public class UserDao implements Dao<User, Integer> {
         return user;
     }
     
-    /** Deletes a user from the database using id
+    /** Deletes a user from the database using id.
      * 
-     * @param id The id of the user that is to be deleted
+     * @param id The id of the user that will be deleted.
      * @throws java.sql.SQLException
      */ 
     @Override

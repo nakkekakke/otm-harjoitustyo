@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** The class for communication between cryptobatches and the database
+/** The class for handling CryptoBatches between the service class and the database.
  * 
  */
 public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
@@ -24,10 +24,10 @@ public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
         this.cryptoDao = cryptoDao;
     }
     
-    /** Finds one instance of CryptoBatch, specified by an id
+    /** Finds a CryptoBatch from the database, using a unique id.
      * 
-     * @param id The id specifying the CryptoBatch to find
-     * @return The found CryptoBatch; null if nothing was found
+     * @param id The id specifying the wanted CryptoBatch.
+     * @return The found cryptoBatch, or null if nothing was found.
      * @throws java.sql.SQLException 
      */    
     @Override
@@ -35,8 +35,9 @@ public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
         ResultSet rs = null;
         Cryptocurrency crypto = null;
         try (Connection conn = database.getConnection(); 
-             PreparedStatement stat = conn.prepareStatement("SELECT * FROM CryptoBatch WHERE CryptoBatch.id = " + id)) {
+             PreparedStatement stat = conn.prepareStatement("SELECT * FROM CryptoBatch WHERE CryptoBatch.id = ?")) {
             
+            stat.setInt(1, id);
             rs = stat.executeQuery();
             if (rs.next()) {
                 crypto = cryptoDao.findOneWithId(rs.getInt("cryptocurrency_id"));
@@ -50,9 +51,9 @@ public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
         return new CryptoBatch(id, rs.getInt("amount"), rs.getInt("totalPaid"), LocalDate.parse(rs.getString("date")), crypto);
     }
     
-    /** Finds all instances of CryptoBatch stored in the database
+    /** Finds all instances of CryptoBatch stored in the database.
      * 
-     * @return A list containing every CryptoBatch found in the database; an empty list if nothing was found
+     * @return A list containing every CryptoBatch found in the database, or an empty list if nothing was found.
      * @throws java.sql.SQLException
      */ 
     @Override
@@ -74,10 +75,10 @@ public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
         return batches;
     }
     
-    /** Finds all instances of CryptoBatch of a cryptocurrency
+    /** Finds all instances of CryptoBatch that belong to a speficied cryptocurrency.
      * 
-     * @param crypto The cryptocurrency whose CryptoBatches will be returned
-     * @return A list containing every CryptoBatch of the specified cryptocurrency; an empty list if nothing was found
+     * @param crypto The cryptocurrency whose CryptoBatches will be returned.
+     * @return A list containing every CryptoBatch of the specified cryptocurrency, or an empty list if nothing was found.
      * @throws java.sql.SQLException 
      */
     public List<CryptoBatch> findAllFromCryptocurrency(Cryptocurrency crypto) throws SQLException {
@@ -87,15 +88,17 @@ public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
         }
         
         try (Connection conn = database.getConnection();
-             PreparedStatement stat = 
-                     conn.prepareStatement("SELECT * FROM CryptoBatch WHERE CryptoBatch.cryptocurrency_id = " + crypto.getId());
-             ResultSet rs = stat.executeQuery()) {
+            PreparedStatement stat = 
+                    conn.prepareStatement("SELECT * FROM CryptoBatch WHERE CryptoBatch.cryptocurrency_id = ?")) {
             
-            while (rs.next()) {
-                Cryptocurrency c = cryptoDao.findOneWithId(rs.getInt("cryptocurrency_id"));
-                
-                if (c != null) {
-                    batches.add(new CryptoBatch(rs.getInt("id"), rs.getInt("amount"), rs.getInt("totalPaid"), LocalDate.parse(rs.getString("date")), c));
+            stat.setInt(1, crypto.getId());
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    Cryptocurrency c = cryptoDao.findOneWithId(rs.getInt("cryptocurrency_id"));
+                    
+                    if (c != null) {
+                        batches.add(new CryptoBatch(rs.getInt("id"), rs.getInt("amount"), rs.getInt("totalPaid"), LocalDate.parse(rs.getString("date")), c));
+                    }
                 }
             }
         }
@@ -104,31 +107,28 @@ public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
     }
     
     
-    /** Finds a specific CryptoBatch of a cryptocurrency
+    /** Finds a specified CryptoBatch belonging to a specified cryptocurrency.
      * 
-     * @param batch The CryptoBatch to be found
-     * @param crypto The cryptocurrency whose CryptoBatch will be searched for
-     * @return The found CryptoBatch; null if the CryptoBatch wasn't found
+     * @param batch The CryptoBatch to be found.
+     * @param crypto The cryptocurrency from which the CryptoBatch will be searched.
+     * @return The found CryptoBatch, or null if nothing was found.
      * @throws java.sql.SQLException 
      */
     public CryptoBatch findOneFromCryptocurrency(CryptoBatch batch, Cryptocurrency crypto) throws SQLException {
-        try {
-            for (CryptoBatch b : findAllFromCryptocurrency(crypto)) {
-                if (b.equals(batch)) {
-                    return b;
-                }
+        for (CryptoBatch b : findAllFromCryptocurrency(crypto)) {
+            if (b.equals(batch)) {
+                return b;
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
+        
         return null;
     }
     
-    /** Adds a CryptoBatch to a cryptocurrency if it doesn't exist there yet
+    /** Adds a CryptoBatch to the database, linking it to a cryptocurrency.
      * 
-     * @param batch The CryptoBatch that will be added to the database
-     * @param crypto The cryptocurrency for which the new CryptoBatch will be added
-     * @return The added CryptoBatch; null if nothing was added
+     * @param batch The CryptoBatch that will be added to the database.
+     * @param crypto The cryptocurrency for which the new CryptoBatch will be added.
+     * @return The added CryptoBatch, or null if nothing was added.
      * @throws java.sql.SQLException
      */ 
     public CryptoBatch save(CryptoBatch batch, Cryptocurrency crypto) throws SQLException {
@@ -151,9 +151,9 @@ public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
         return batch;
     }
 
-    /**  Deletes an instance of CryptoBatch from the database using id
+    /**  Deletes a CryptoBatch from the database, using a unique id.
      * 
-     *   @param id The id of the CryptoBatch that is to be deleted
+     *   @param id The id of the CryptoBatch that will be deleted.
      *   @throws java.sql.SQLException
      */ 
     @Override

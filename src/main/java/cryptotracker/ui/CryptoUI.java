@@ -35,6 +35,7 @@ public class CryptoUI extends Application {
     private CryptocurrencyDao cryptoDao;
     private CryptoBatchDao batchDao;
     private CryptoService service;
+    private InputChecker inputChecker;
     
     private Stage primaryStage;
     
@@ -71,6 +72,7 @@ public class CryptoUI extends Application {
         this.cryptoDao = new CryptocurrencyDao(database, portfolioDao);
         this.batchDao = new CryptoBatchDao(database, cryptoDao);
         this.service = new CryptoService(userDao, portfolioDao, cryptoDao, batchDao);
+        this.inputChecker = new InputChecker();
         this.menuLabel = new Label();
     }
     
@@ -211,14 +213,14 @@ public class CryptoUI extends Application {
             String price = cryptoPriceInput.getText();
             String date = cryptoDateInput.getText();
             
-            Integer intAmount = tryParseInt(amount);
-            Integer intPrice = tryParseInt(price);
-            LocalDate parsedDate = tryParseDate(date);
+            Integer intAmount = inputChecker.tryParseInt(amount);
+            Integer intPrice = inputChecker.tryParseInt(price);
+            LocalDate parsedDate = inputChecker.tryParseDate(date);
             
             if (name.length() < 1 || name.length() > 50) {
                 cryptoAddLabel.setText("That's not a valid name...");
                 cryptoAddLabel.setTextFill(Color.RED);
-            } else if (isInteger(amount) == false || isInteger(price) == false) {
+            } else if (inputChecker.isInteger(amount) == false || inputChecker.isInteger(price) == false) {
                 cryptoAddLabel.setText("Sorry, for now only integers are allowed!");
                 cryptoAddLabel.setTextFill(Color.RED);
             } else if (intAmount == null || intAmount < 1) {
@@ -227,7 +229,7 @@ public class CryptoUI extends Application {
             } else if (intPrice == null || intPrice < 1) {
                 cryptoAddLabel.setText("Invalid price value!");
                 cryptoAddLabel.setTextFill(Color.RED);
-            } else if (isValidDate(date) == false) {
+            } else if (inputChecker.isValidDate(date) == false) {
                 cryptoAddLabel.setText("Invalid format of date!");
                 cryptoAddLabel.setTextFill(Color.RED);
             } else if (parsedDate == null) {
@@ -380,75 +382,6 @@ public class CryptoUI extends Application {
         priceInput.setText("");
         dateInput.setText("");
     }
-
-    private boolean isInteger(String string) {
-        if (string.length() < 1) {
-            return false;
-        }
-        
-        for (int i = 0; i < string.length(); i++) {
-            char c = string.charAt(i);
-            if (!Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    private Integer tryParseInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-    
-    private boolean isValidDate(String string) {
-        if (string.length() != 10) {
-            return false;
-        }
-        
-        for (int i = 0; i < 10; i++) {
-            char c = string.charAt(i);
-            
-            if (i != 4 && i != 7) {
-                if (!Character.isDigit(c)) {
-                    return false;
-                }
-            } else {
-                if (c != '-') {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
-    private LocalDate tryParseDate(String string) {
-        try {
-            return LocalDate.parse(string);
-        } catch (DateTimeParseException e) {
-            return null;
-        }
-    }
-    
-//    private void processNumberValues(String string) {
-//        int dotIndex = string.length();
-//        boolean hasNumberBeforeDot = true;
-//        boolean value = true;
-//        
-//        if (string.length() < 1) {
-//            return false;
-//        }
-//        
-//        for (int i = 0; i < string.length(); i++) {
-//            char c = string.charAt(i);
-//            if (Character.isDigit(c)) {
-//                
-//            }
-//        }
-//        
-//    }
     
     @Override
     public void stop() {
@@ -459,108 +392,5 @@ public class CryptoUI extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-//    public void start() {
-//        System.out.println("Welcome to CryptoTracker!");
-//        loginView();
-//    }
-//
-//    public void loginView() {
-//        while (true) {
-//            System.out.println("\n-----------------\n");
-//            System.out.println("Choose what to do (0-2):");
-//            System.out.println("0: Quit");
-//            System.out.println("1: Register");
-//            System.out.println("2: Log in");
-//            System.out.println("");
-//            System.out.print("I choose option: ");
-//            String option = scanner.nextLine();
-//            
-//            if (option.equals("0")) {
-//                System.out.println("Bye!");
-//                break;
-//                
-//            } else if (option.equals("1")) {
-//                register();
-//                
-//            } else if (option.equals("2")) {
-//                if (login() == true) {
-//                    break;
-//                }
-//                
-//            } else {
-//                System.out.println("Try again.");
-//            }
-//        }
-//        
-//        if (service.getLoggedIn() != null) {
-//            loggedInView();
-//        }
-//    }
-//    
-//    public void loggedInView() {
-//        System.out.println("\n-----------------\n");
-//        System.out.println("Welcome, " + service.getLoggedIn().getUsername() + "!");
-//        while (true) {
-//            System.out.println("\n-----------------\n");
-//            System.out.println("Choose what to do: (0-1)");
-//            System.out.println("0: Log out");
-//            System.out.println("1: Show portfolio");
-//            System.out.println("");
-//            System.out.print("I choose option: ");
-//            String option = scanner.nextLine();
-//            
-//            if (option.equals("0")) {
-//                logout();
-//                break;
-//            } else if (option.equals("1")) {
-//                System.out.println("This feature will be implemented soon, stay tuned!");
-//            } else {
-//                System.out.println("Try again.");
-//            }
-//        }
-//        
-//        if (service.getLoggedIn() == null) {
-//            loginView();
-//        } else {
-//            System.out.println("Something went wrong...");
-//        }
-//        
-//    }
-//    
-//    private boolean register() {
-//        System.out.print("Choose your username: ");
-//        String username = scanner.nextLine();
-//        if (!service.usernameLengthValid(username)) {
-//            System.out.println("Username must be " + service.getUsernameMinLength()
-//                    + "-" + service.getUsernameMaxLength() + " characters long");
-//            return false;
-//        } else if (service.createUser(username) == false) {
-//            System.out.println("Username is already taken!");
-//            return false;
-//        } else {
-//            System.out.println("Registration successful!");
-//            return true;
-//        }
-//    }
-//    
-//    private boolean login() {
-//        System.out.print("Enter your username: ");
-//        String username = scanner.nextLine();
-//        if (service.login(username) == false) {
-//            System.out.println("Username doesn't exist!");
-//            return false;
-//        } else {
-//            System.out.println("Username found! Logging in...");
-//            return true;
-//        }
-//    }
-//    
-//    private void logout() {
-//        service.logout();
-//        System.out.println("Logged out!");
-//    }
-
-
 
 }

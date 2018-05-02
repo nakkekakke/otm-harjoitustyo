@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** The class for communication between cryptocurrencies and the database
+/** The class for handling portfolios between the service class and the database.
  * 
  */
 public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
@@ -23,10 +23,10 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
         this.portfolioDao = portfoliodao;
     }
     
-    /** Finds one instance of cryptocurrency, specified by an id
+    /** Finds a cryptocurrency from the database, using a unique id.
      * 
-     * @param id The id specifying the cryptocurrency to find
-     * @return The found cryptocurrency; null if nothing was found
+     * @param id The id of the wanted cryptocurrency.
+     * @return The found cryptocurrency, or null if nothing was found.
      * @throws java.sql.SQLException 
      */    
     @Override
@@ -51,7 +51,7 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
         return crypto;
     }
     
-    /** Finds all instances of cryptocurrency stored in the database
+    /** Finds all cryptocurrencies stored in the database.
      * 
      * @return A list containing every cryptocurrency found in the database; an empty list if nothing was found
      * @throws java.sql.SQLException
@@ -76,10 +76,10 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
         return cryptos;
     }
     
-    /** Finds all instances of cryptocurrency in a specific portfolio
+    /** Finds all cryptocurrencies in a specified portfolio.
      * 
-     * @param portfolio The portfolio whose cryptocurrencies will be returned
-     * @return A list containing every cryptocurrency found in the specific portfolio; an empty list if nothing was found
+     * @param portfolio The portfolio whose cryptocurrencies will be returned.
+     * @return A list containing every cryptocurrency found in the specified portfolio, or an empty list if nothing was found.
      * @throws java.sql.SQLException 
      */
     public List<Cryptocurrency> findAllInPortfolio(Portfolio portfolio) throws SQLException {
@@ -107,31 +107,28 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
     }
     
     
-    /** Finds a cryptocurrency from a portfolio
+    /** Finds a cryptocurrency from a portfolio.
      * 
-     * @param crypto The cryptocurrency to be found
-     * @param portfolio The portfolio from which a cryptocurrency will be searched
-     * @return The found cryptocurrency; null if the cryptocurrency wasn't found
+     * @param crypto The cryptocurrency to be found.
+     * @param portfolio The portfolio from which the cryptocurrency will be searched.
+     * @return The found cryptocurrency, or null if nothing was found.
      * @throws java.sql.SQLException 
      */
     public Cryptocurrency findOneInPortfolio(Cryptocurrency crypto, Portfolio portfolio) throws SQLException {
-        try {
-            for (Cryptocurrency c : findAllInPortfolio(portfolio)) {
-                if (c.equals(crypto)) {
-                    return c;
-                }
+        for (Cryptocurrency c : findAllInPortfolio(portfolio)) {
+            if (c.equals(crypto)) {
+                return c;
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
+     
         return null;
     }
     
-    /** Adds a cryptocurrency to the database 
+    /** Adds a cryptocurrency to the database.
      * 
-     * @param crypto The cryptocurrency that will be added to the database
-     * @param portfolio The portfolio of the logged in user
-     * @return The added cryptocurrency, or null if nothing was added
+     * @param crypto The cryptocurrency that will be added to the database.
+     * @param portfolio The portfolio of the logged in user.
+     * @return The added cryptocurrency, or null if the cryptocurrency already exists in that portfolio.
      * @throws java.sql.SQLException
      */ 
     public Cryptocurrency save(Cryptocurrency crypto, Portfolio portfolio) throws SQLException {
@@ -154,16 +151,17 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
         return crypto;
     }
     
-    /**  Deletes an instance of cryptocurrency from the database using id
+    /**  Deletes a cryptocurrency from the database, using unique id.
      * 
-     *   @param id The id of the cryptocurrency that is to be deleted
+     *   @param id The id of the cryptocurrency that will be deleted.
      *   @throws java.sql.SQLException
      */ 
     @Override
     public void delete(Integer id) throws SQLException {
         try (Connection conn = database.getConnection();
              PreparedStatement stat = 
-                     conn.prepareStatement("DELETE FROM Cryptocurrency WHERE Cryptocurrency.id = " + id)) {
+                     conn.prepareStatement("DELETE FROM Cryptocurrency WHERE Cryptocurrency.id = ?")) {
+            stat.setInt(1, id);
             
             stat.executeUpdate();
             
