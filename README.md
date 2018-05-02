@@ -1,6 +1,6 @@
 # CryptoTracker
 
-Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti. **Tällä hetkellä sovellukseen voi rekisteröityä, kirjautua sisään ja ulos, lisätä kryptovaluuttoja ja ostoeriä. Sovelluksen kautta ostoeriä ei vielä näe, mutta ne tallentuvat paikalliseen tietokantaan** Sovellus on englanninkielinen.
+Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti. **Sovellus on vielä keskeneräinen ja uusia toimintoja lisätään.** Sovellus on englanninkielinen.
 
 ## Dokumentaatio
 
@@ -9,6 +9,8 @@ Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sove
 [Työaikakirjanpito](https://github.com/nakkekakke/CryptoTracker/blob/master/dokumentointi/tyoaikakirjanpito.md)
 
 [Arkkitehtuurikuvaus](https://github.com/nakkekakke/CryptoTracker/blob/master/dokumentointi/arkkitehtuuri.md)
+
+[Käyttöohje](https://github.com/nakkekakke/CryptoTracker/blob/master/dokumentointi/kayttoohje.md)
 
 ## Komentorivitoiminnot
 
@@ -46,12 +48,24 @@ Jar-tiedosto generoidaan komennolla
 mvn package
 ```
 
-Syntynyt jar-tiedosto _CryptoTracker-1.0-SNAPSHOT.jar_ löytyy kansiosta _target_. HUOM! Sovellus on riippuvainen repositorion juuresta löytyvästä tiedostosta config.properties! Tiedoston täytyy siis olla samassa kansiossa kuin suoritettava jar-tiedosto. Voit esimerkiksi siirtää jar-tiedoston repositorion juureen komennolla
+Syntynyt jar-tiedosto _CryptoTracker-1.0-SNAPSHOT.jar_ löytyy kansiosta _target_. HUOM! Sovellus on riippuvainen repositorion juuresta löytyvästä tiedostosta config.properties (joka osoittaa kansiosta "db" löytyvään tietokantaan)! Tiedoston täytyy siis olla samassa kansiossa kuin suoritettava jar-tiedosto. Voit esimerkiksi siirtää jar-tiedoston repositorion juureen komennolla
 
 ```
 mv CryptoTracker-1.0-SNAPSHOT.jar ..
 ```
 
+### JavaDoc
+
+JavaDoc generoidaan komennolla
+
+```
+mvn javadoc:javadoc
+```
+
+JavaDocia voi tarkastella avaamalla selaimella tiedosto _target/site/apidocs/index.html_
+
 ### Releases
 
 [Viikko 5](https://github.com/nakkekakke/CryptoTracker/releases/tag/v0.1)
+
+[Viikko 6](https://github.com/nakkekakke/CryptoTracker/releases/tag/v0.2)
