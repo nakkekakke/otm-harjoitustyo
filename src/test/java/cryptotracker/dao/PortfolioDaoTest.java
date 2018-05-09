@@ -22,8 +22,10 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -61,7 +63,7 @@ public class PortfolioDaoTest {
         when(database.getConnection()).thenReturn(conn);
         when(conn.prepareStatement(any(String.class))).thenReturn(stat);
         when(stat.executeQuery()).thenReturn(rs);
-//        portfolioDao = new PortfolioDao(database, userDao);
+        portfolioDao = new PortfolioDao(database, userDao);
     }
 
     @Test
@@ -138,13 +140,31 @@ public class PortfolioDaoTest {
     @Test
     public void findOneWithUserIfResultSetHasStuffThenGetIt() throws SQLException {
         when(rs.next()).thenReturn(true);
-        portfolioDao.findOneWithUser(testUser);
+        Portfolio p = portfolioDao.findOneWithUser(testUser);
         
         InOrder inOrder = inOrder(rs);
         inOrder.verify(rs).next();
         inOrder.verify(rs).getInt(any(String.class));
         inOrder.verify(rs).close();
         inOrder.verifyNoMoreInteractions();
+        
+        assertTrue(p == null);
+    }
+    
+    @Test
+    public void findOneWithUserIfUserWasFoundThenReturnIt() throws SQLException {
+        User u = new User(95, "test");
+        doReturn(u).when(userDao).findOneWithId(any(Integer.class));
+        when(rs.next()).thenReturn(true);
+        Portfolio p = portfolioDao.findOneWithUser(testUser);
+        
+        InOrder inOrder = inOrder(rs);
+        inOrder.verify(rs).next();
+        inOrder.verify(rs, times(2)).getInt(any(String.class));
+        inOrder.verify(rs).close();
+        inOrder.verifyNoMoreInteractions();
+        
+        assertTrue(p != null);
     }
     
     @Test

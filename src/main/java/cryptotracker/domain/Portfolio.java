@@ -2,6 +2,7 @@ package cryptotracker.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /** The class describing a portfolio of a user 
@@ -43,6 +44,14 @@ public class Portfolio {
         }
         
         Portfolio other = (Portfolio) object;
-        return this.user.equals(other.getUser()) && this.id == other.getId();
+        return this.id == other.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + this.id;
+        hash = 53 * hash + Objects.hashCode(this.user);
+        return hash;
     }
 }

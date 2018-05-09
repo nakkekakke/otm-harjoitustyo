@@ -21,8 +21,10 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -174,7 +176,7 @@ public class UserDaoTest {
     }
     
     @Test
-    public void saveWorksCorrectly() throws SQLException {
+    public void saveStatementWorksCorrectly() throws SQLException {
         userDao.save(testUser);
         
         InOrder inOrder = inOrder(stat);
@@ -182,6 +184,25 @@ public class UserDaoTest {
         inOrder.verify(stat).executeUpdate();
         inOrder.verify(stat).close();
         inOrder.verifyNoMoreInteractions();
+    }
+    
+    @Test
+    public void saveReturnsUserIfUserDoesntExistYet() throws SQLException {
+        UserDao spyDao = spy(userDao);
+        doReturn(null).when(spyDao).findOneWithUsername(any(String.class));
+        
+        User returnUser = spyDao.save(testUser);
+        assertTrue(returnUser != null);
+    }
+    
+    @Test
+    public void saveReturnsNullIfUserAlreadyExists() throws SQLException {
+        UserDao spyDao = spy(userDao);
+        User existingUser = new User(99, "name");
+        doReturn(existingUser).when(spyDao).findOneWithUsername(any(String.class));
+        
+        User returnUser = spyDao.save(testUser);
+        assertTrue(returnUser == null);
     }
 
     @Test

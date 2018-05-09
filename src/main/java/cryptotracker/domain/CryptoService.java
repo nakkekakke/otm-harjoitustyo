@@ -52,6 +52,10 @@ public class CryptoService {
         return loggedIn;
     }
     
+    public void setLoggedIn(User user) {
+        this.loggedIn = user;
+    }
+    
     public Portfolio getActivePortfolio() {
         return activePortfolio;
     }
@@ -61,7 +65,7 @@ public class CryptoService {
     }
     
     //
-    // GENERAL (USER)
+    // GENERAL
     //
     
     
@@ -71,8 +75,8 @@ public class CryptoService {
      * @return True if the length of the username is valid, false if too short or too long
      */ 
     public boolean usernameLengthValid(String username) {
-        if (username.length() >= usernameMinLength 
-                && username.length() <= usernameMaxLength) {
+        if (username.length() >= getUsernameMinLength() 
+                && username.length() <= getUsernameMaxLength()) {
             return true;
         }
         return false;
@@ -96,9 +100,9 @@ public class CryptoService {
             return false;
         }
         
-        loggedIn = user;
+        setLoggedIn(user);
         
-        activePortfolio = findPortfolio(user);
+        setActivePortfolio(findPortfolio(user));
         
         return true;
     }
@@ -107,8 +111,8 @@ public class CryptoService {
      *   
      */ 
     public void logout() {
-        loggedIn = null;
-        activePortfolio = null;
+        setLoggedIn(null);
+        setActivePortfolio(null);
     }
     
     //
@@ -139,7 +143,7 @@ public class CryptoService {
     }
     
     
-    public User findUserFromDatabase(User user) {
+    public User findUser(User user) {
         User foundUser;
         
         try {
@@ -161,8 +165,8 @@ public class CryptoService {
      * @param user The user for which a new portfolio will be created
      * @return True if a portfolio was added for the user, otherwise false
      */
-    private boolean createPortfolio(User user) {
-        User foundUser = findUserFromDatabase(user);
+    public boolean createPortfolio(User user) {
+        User foundUser = findUser(user);
         if (foundUser.getPortfolio() != null) {
             return false;
         }
@@ -186,26 +190,25 @@ public class CryptoService {
     }
     
     public Portfolio findPortfolio(User user) {
-        Portfolio p = null;
         
         try {
-            p = portfolioDao.findOneWithUser(user);
+            return portfolioDao.findOneWithUser(user);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
         
-        return p;
     }
     
     //
     // CRYPTOCURRENCY
     //
     
-    private Cryptocurrency createCryptoInstance(String name) {
+    Cryptocurrency createCryptoInstance(String name) {
 
         try {
-            Cryptocurrency newCrypto = new Cryptocurrency(1, name, activePortfolio);
-            cryptoDao.save(newCrypto, activePortfolio);
+            Cryptocurrency newCrypto = new Cryptocurrency(1, name, getActivePortfolio());
+            cryptoDao.save(newCrypto, getActivePortfolio());
             return findCryptoByName(name);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -232,13 +235,13 @@ public class CryptoService {
     
     public List<Cryptocurrency> getCryptosInPortfolio() {
         try {
-            return cryptoDao.findAllInPortfolio(activePortfolio);
+            return cryptoDao.findAllInPortfolio(getActivePortfolio());
         } catch (SQLException e) {
             return null;
         }
     }
     
-    private Cryptocurrency findCryptoByName(String name) {
+    Cryptocurrency findCryptoByName(String name) {
         for (Cryptocurrency c : getCryptosInPortfolio()) {
             if (c.getName().equals(name)) {
                 return c;
@@ -281,7 +284,7 @@ public class CryptoService {
         return batches;
     }
     
-    private void deleteBatchesOfCrypto(Cryptocurrency crypto) {
+    void deleteBatchesOfCrypto(Cryptocurrency crypto) {
         getBatchesOfCrypto(crypto).forEach((batch) -> {
             deleteBatch(batch.getId());
         });

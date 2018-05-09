@@ -160,7 +160,8 @@ public class CryptoBatchDao implements Dao<CryptoBatch, Integer> {
     public void delete(Integer id) throws SQLException {
         try (Connection conn = database.getConnection();
              PreparedStatement stat = 
-                     conn.prepareStatement("DELETE FROM CryptoBatch WHERE CryptoBatch.id = " + id)) {
+                     conn.prepareStatement("DELETE FROM CryptoBatch WHERE CryptoBatch.id = ?")) {
+            stat.setInt(1, id);
             
             stat.executeUpdate();
             

@@ -48,10 +48,6 @@ public class User {
         if (!this.username.equals(other.getUsername())) {
             return false;
         }
-//        if (this.id != other.id) {
-//            return false;
-//        }
-//        
         return true;
     }
 

@@ -32,8 +32,6 @@ public class Database {
             stat.execute(portfolio);
             stat.execute(crypto);
             stat.execute(batch);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
         
     }

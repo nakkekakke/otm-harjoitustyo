@@ -3,12 +3,14 @@ package cryptotracker.dao;
 import cryptotracker.domain.CryptoBatch;
 import cryptotracker.domain.Cryptocurrency;
 import cryptotracker.domain.Portfolio;
+import cryptotracker.domain.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +21,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,23 +80,20 @@ public class CryptoBatchDaoTest {
     @Test
     public void findOneWithIdIfResultSetHasStuffGetIt() throws SQLException {
         when(rs.next()).thenReturn(true);
-        when(cryptoDao.findOneWithId(any(Integer.class))).thenReturn(testCrypto);
+        doReturn(testCrypto).when(cryptoDao).findOneWithId(any(Integer.class));
         
         try {
-            batchDao.findOneWithId(5);
+            batchDao.findOneWithId(1);
         } catch (NullPointerException e) {
             
         }
-        
-        InOrder inOrder = inOrder(rs);
-        inOrder.verify(rs).next();
-        inOrder.verify(rs, times(3)).getInt(any(String.class));
-//        when(LocalDate.parse(rs.getString("date"))).thenReturn(LocalDate.now());
+
+        verify(rs).next();
+        verify(rs, times(3)).getInt(any(String.class));
     }
     
     @Test
     public void findOneWithIdIfResultSetIsEmptyDontGetAnything() throws SQLException {
-        
         when(rs.next()).thenReturn(false);
         batchDao.findOneWithId(40);
         
@@ -114,16 +115,21 @@ public class CryptoBatchDaoTest {
     @Test
     public void findAllIfResultSetHasStuffThenGetIt() throws SQLException {
         when(rs.next()).thenReturn(true).thenReturn(false);
-        batchDao.findAll();
+        doReturn(testCrypto).when(cryptoDao).findOneWithId(any(Integer.class));
+        List<CryptoBatch> batches = new ArrayList<>();
+        
+        try {
+            batches = batchDao.findAll();
+        } catch (NullPointerException e) {
+            
+        }
         
         InOrder inOrder = inOrder(rs);
         inOrder.verify(rs).next();
-        inOrder.verify(rs).getInt(any(String.class));
-        inOrder.verify(rs).next();
+        inOrder.verify(rs, times(4)).getInt(any(String.class));
+        inOrder.verify(rs).getString("date");
         inOrder.verify(rs).close();
         inOrder.verifyNoMoreInteractions();
-        
-        verify(rs, times(2)).next();
     }
     
     @Test
@@ -131,12 +137,23 @@ public class CryptoBatchDaoTest {
         when(rs.next()).thenReturn(false);
         batchDao.findAll();
         
-        InOrder inOrder = inOrder(rs);
-        inOrder.verify(rs).next();
-        inOrder.verify(rs, never()).getInt(any(String.class));
-        inOrder.verify(rs, never()).getString(any(String.class));
-        inOrder.verify(rs).close();
-        inOrder.verifyNoMoreInteractions();
+        verify(rs).next();
+        verify(rs, never()).getInt(any(String.class));
+        verify(rs, never()).getString(any(String.class));
+        verify(rs).close();
+    }
+    
+    @Test
+    public void findAllIfCryptoIsNullDontGetAnything() throws SQLException {
+        when(rs.next()).thenReturn(true).thenReturn(false);
+        doReturn(null).when(cryptoDao).findOneWithId(any(Integer.class));
+        batchDao.findAll();
+        
+        verify(rs, times(2)).next();
+        verify(rs).getInt("cryptocurrency_id");
+        verify(rs, never()).getString(any(String.class));
+        verify(rs).close();
+        verify(cryptoDao).findOneWithId(any(Integer.class));
     }
     
     @Test
@@ -153,16 +170,18 @@ public class CryptoBatchDaoTest {
     @Test
     public void findAllFromCryptocurrencyIfResultSetHasStuffThenGetIt() throws SQLException {
         when(rs.next()).thenReturn(true).thenReturn(false);
-        batchDao.findAllFromCryptocurrency(testCrypto);
+        doReturn(testCrypto).when(cryptoDao).findOneWithId(any(Integer.class));
         
-        InOrder inOrder = inOrder(rs);
-        inOrder.verify(rs).next();
-        inOrder.verify(rs).getInt(any(String.class));
-        inOrder.verify(rs).next();
-        inOrder.verify(rs).close();
-        inOrder.verifyNoMoreInteractions();
+        try {
+            batchDao.findAllFromCryptocurrency(testCrypto);
+        } catch (NullPointerException e) {
+            
+        }
         
-        verify(rs, times(2)).next();
+        verify(rs).next();
+        verify(rs, times(4)).getInt(any(String.class));
+        verify(rs).getString("date");
+        verify(rs).close();
     }
     
     @Test
@@ -179,39 +198,78 @@ public class CryptoBatchDaoTest {
     }
     
     @Test
-    public void findOneFromCryptocurrencyWorksCorrectly() throws SQLException {
-        CryptoBatch c = batchDao.findOneFromCryptocurrency(testBatch, testCrypto);
+    public void findAllFromCryptocurrencyIfParameterIsNullReturnEmptyList() throws SQLException {
+        testCrypto = null;
         List<CryptoBatch> batches = batchDao.findAllFromCryptocurrency(testCrypto);
-        boolean found = false;
-        for (CryptoBatch b : batches) {
-            if (b.equals(testBatch)) {
-                found = true;
-            }
-        }
-        if (c == null) {
-            assertFalse(found);
-        } else {
-            assertTrue(found);
-        }
         
+        assertTrue(batches.isEmpty());
     }
     
     @Test
-    public void saveStatementWorksCorrectly() throws SQLException {
-        CryptoBatch batch = new CryptoBatch(1, 20, 10, LocalDate.now(), testCrypto);
-        CryptoBatch b = batchDao.save(batch, testCrypto);
+    public void findOneFromCryptocurrencyReturnsBatchIfFound() throws SQLException {
+        List<CryptoBatch> batches = new ArrayList<>();
+        batches.add(testBatch);
+        
+        CryptoBatchDao spyDao = spy(batchDao);
+        doReturn(batches).when(spyDao).findAllFromCryptocurrency(testCrypto);
+        
+        CryptoBatch returnBatch = spyDao.findOneFromCryptocurrency(testBatch, testCrypto);
+        
+        assertEquals(returnBatch, testBatch);
+    }
+    
+    @Test
+    public void findOneFromCryptocurrencyReturnsNullIfBatchNotFound() throws SQLException {
+        List<CryptoBatch> batches = new ArrayList<>();
+        batches.add(new CryptoBatch(100, 15, 13, LocalDate.now(), testCrypto));
+        
+        CryptoBatchDao spyDao = spy(batchDao);
+        doReturn(batches).when(spyDao).findAllFromCryptocurrency(testCrypto);
+        
+        CryptoBatch returnBatch = spyDao.findOneFromCryptocurrency(testBatch, testCrypto);
+        
+        assertNull(returnBatch);
+    }
+    
+    @Test
+    public void saveSavesBatchCorrectly() throws SQLException {
+        CryptoBatch paramBatch = new CryptoBatch(1, 20, 10, LocalDate.now(), testCrypto);
+        CryptoBatch returnBatch = batchDao.save(paramBatch, testCrypto);
         
         InOrder inOrder = inOrder(stat);
         inOrder.verify(stat).setInt(1, 20);
         inOrder.verify(stat).setInt(2, 10);
-        inOrder.verify(stat).setString(3, batch.getDate().toString());
+        inOrder.verify(stat).setString(3, paramBatch.getDate().toString());
         inOrder.verify(stat).setInt(4, testCrypto.getId());
         inOrder.verify(stat).executeUpdate();
         inOrder.verify(stat).close();
         inOrder.verifyNoMoreInteractions();
         
-        assertEquals(b, batch);
+        assertEquals(returnBatch, paramBatch);
     }
-
+    
+    @Test
+    public void saveDoesntSaveIfParametersAreNull() throws SQLException {
+        testBatch = null;
+        CryptoBatch returnBatch = batchDao.save(testBatch, testCrypto);
+        assertEquals(returnBatch, null);
+        
+        testCrypto = null;
+        returnBatch = batchDao.save(testBatch, testCrypto);
+        assertEquals(returnBatch, null);
+        
+        testBatch = new CryptoBatch(1, 1, 1, LocalDate.now(), testCrypto);
+        returnBatch = batchDao.save(testBatch, testCrypto);
+        assertEquals(returnBatch, null);
+        
+        verify(stat, never()).executeUpdate();
+    }
+    
+    @Test
+    public void deleteStatementWorksCorrectly() throws SQLException {
+        batchDao.delete(10);
+        verify(stat).setInt(1, 10);
+        verify(stat).executeUpdate();
+    }
 
 }

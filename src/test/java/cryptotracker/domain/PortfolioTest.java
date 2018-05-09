@@ -44,15 +44,12 @@ public class PortfolioTest {
     public void equalsFailsIfObjectsDifferentTypes() {
         Object o = new String();
         assertFalse(testPortfolio.equals(o));
-    }    
+    }
     
-//    @Test
-//    public void contentsOfCryptoListCanBeChanged() {
-//        Cryptocurrency assistanceCrypto = new Cryptocurrency(5, "Bitcoin", testPortfolio);
-//        assertFalse(testPortfolio.getCryptoList().contains(assistanceCrypto));
-//        
-//        testPortfolio.getCryptoList().add(assistanceCrypto);
-//        assertTrue(testPortfolio.getCryptoList().contains(assistanceCrypto));
-//    }
+    @Test
+    public void hashCodeTest() {
+        Portfolio portfolio = new Portfolio(1, assistanceUser);
+        assertEquals(portfolio.hashCode(), -265689387);
+    }
 
 }

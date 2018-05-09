@@ -22,11 +22,11 @@ public class InputChecker {
     }
     
     public Integer tryParseInt(String string) {
-        try {
+        if (isInteger(string)) {
             return Integer.parseInt(string);
-        } catch (NumberFormatException e) {
-            return null;
         }
+        
+        return null;
     }
     
     public boolean isValidDate(String string) {

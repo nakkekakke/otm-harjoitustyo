@@ -43,11 +43,13 @@ public class CryptocurrencyDao implements Dao<Cryptocurrency, Integer> {
                 p = portfolioDao.findOneWithId(rs.getInt("portfolio_id"));
             }
             if (p == null) {
+                rs.close();
                 return null;
             }
             crypto = new Cryptocurrency(id, rs.getString("name"), p);
         }
         
+        rs.close();
         return crypto;
     }
     
