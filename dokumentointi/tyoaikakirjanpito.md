@@ -23,4 +23,6 @@
 | 30.4. | 2 h  | CryptoBatch-perustoiminnallisuudet valmiit |
 | 1.5.  | 3 h  | Lisää testejä |
 | 2.5.  | 7 h  | Javadoc, arkkitehtuurikuvaus, käyttöohje |
-| yht.  | 77 h |  | 
+| 4.5.  | 1 h  | Testejä |
+| 9.5.  | 5 h  | Lisää testejä, pientä refaktorointia |
+| yht.  | 83 h |  | 
