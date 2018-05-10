@@ -6,37 +6,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PortfolioDaoTest {
+public class DBPortfolioDaoTest {
     
     @InjectMocks
-    PortfolioDao portfolioDao;
+    DBPortfolioDao portfolioDao;
     
     @Mock
     Database database;
@@ -51,7 +40,7 @@ public class PortfolioDaoTest {
     ResultSet rs;
     
     @Mock
-    UserDao userDao;
+    DBUserDao userDao;
     
     @Mock
     User testUser;
@@ -63,7 +52,7 @@ public class PortfolioDaoTest {
         when(database.getConnection()).thenReturn(conn);
         when(conn.prepareStatement(any(String.class))).thenReturn(stat);
         when(stat.executeQuery()).thenReturn(rs);
-        portfolioDao = new PortfolioDao(database, userDao);
+        portfolioDao = new DBPortfolioDao(database, userDao);
     }
 
     @Test
@@ -127,7 +116,6 @@ public class PortfolioDaoTest {
     
     @Test
     public void findOneWithUserStatementWorksCorrectly() throws SQLException {
-//        User testUser = new User(95, "test");
         portfolioDao.findOneWithUser(testUser);
         
         InOrder inOrder = inOrder(stat);

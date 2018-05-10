@@ -5,39 +5,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserDaoTest {
-    
-//    @Rule
-//    public TemporaryFolder testFolder = new TemporaryFolder();
+public class DBUserDaoTest {
         
     @InjectMocks
-    UserDao userDao;
+    DBUserDao userDao;
     
     @Mock
     Database database;
@@ -52,12 +39,6 @@ public class UserDaoTest {
     ResultSet rs;
 
     User testUser;
-    
-//    @BeforeClass
-//    public void initialize() {
-//        userDao = new UserDao(database);
-//        testUser = new User(20, "testUsername");
-//    }
 
     @Before
     public void setUp() throws SQLException {
@@ -65,16 +46,9 @@ public class UserDaoTest {
         when(database.getConnection()).thenReturn(conn);
         when(conn.prepareStatement(any(String.class))).thenReturn(stat);
         when(stat.executeQuery()).thenReturn(rs);
-        userDao = new UserDao(database);
+        userDao = new DBUserDao(database);
         testUser = new User(20, "testUsername");
     }
-    
-//    @Test
-//    public void saveWorks() throws SQLException {
-//        userDao.save(testUser);
-//        verify(stat).setString(1, "testUsername");
-//        verify(stat).setString(1, "testUsername");
-//    }
     
     @Test
     public void findOneWithIdStatementWorksCorrectly() throws SQLException {
@@ -188,7 +162,7 @@ public class UserDaoTest {
     
     @Test
     public void saveReturnsUserIfUserDoesntExistYet() throws SQLException {
-        UserDao spyDao = spy(userDao);
+        DBUserDao spyDao = spy(userDao);
         doReturn(null).when(spyDao).findOneWithUsername(any(String.class));
         
         User returnUser = spyDao.save(testUser);
@@ -197,7 +171,7 @@ public class UserDaoTest {
     
     @Test
     public void saveReturnsNullIfUserAlreadyExists() throws SQLException {
-        UserDao spyDao = spy(userDao);
+        DBUserDao spyDao = spy(userDao);
         User existingUser = new User(99, "name");
         doReturn(existingUser).when(spyDao).findOneWithUsername(any(String.class));
         

@@ -29,11 +29,6 @@ import javafx.stage.Stage;
  */
 public class CryptoUI extends Application {
     
-    private Database database;
-    private UserDao userDao;
-    private PortfolioDao portfolioDao;
-    private CryptocurrencyDao cryptoDao;
-    private CryptoBatchDao batchDao;
     private CryptoService service;
     private InputChecker inputChecker;
     
@@ -65,12 +60,13 @@ public class CryptoUI extends Application {
         
         String databaseAddress = properties.getProperty("databaseAddress");
         
-        this.database = new Database("jdbc:sqlite:" + databaseAddress);
-        this.database.initializeTables();
-        this.userDao = new UserDao(database);
-        this.portfolioDao = new PortfolioDao(database, userDao);
-        this.cryptoDao = new CryptocurrencyDao(database, portfolioDao);
-        this.batchDao = new CryptoBatchDao(database, cryptoDao);
+        Database database = new Database("jdbc:sqlite:" + databaseAddress);
+        database.initializeTables();
+        
+        DBUserDao userDao = new DBUserDao(database);
+        DBPortfolioDao portfolioDao = new DBPortfolioDao(database, userDao);
+        DBCryptocurrencyDao cryptoDao = new DBCryptocurrencyDao(database, portfolioDao);
+        DBCryptoBatchDao batchDao = new DBCryptoBatchDao(database, cryptoDao);
         this.service = new CryptoService(userDao, portfolioDao, cryptoDao, batchDao);
         this.inputChecker = new InputChecker();
         this.menuLabel = new Label();
@@ -78,10 +74,58 @@ public class CryptoUI extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        // LOGIN SCENE
-        
         this.primaryStage = stage;
         
+        loginScene = constructLogInScene();
+        loggedInScene = constructLoggedInScene();
+        cryptoAddScene = constructCryptoAddScene();
+        batchScene = constructCryptoBatchScene();
+        
+        primaryStage.setTitle("CryptoTracker");
+        primaryStage.setScene(loginScene);
+        primaryStage.show();
+        primaryStage.setOnCloseRequest(e -> {
+            System.out.println("Closing program");
+        });
+    }
+    
+    //
+    // CONSTRUCT SCENES
+    //
+    
+    private Scene constructLoggedInScene() {
+        ScrollPane mainScrollPane = new ScrollPane();
+        BorderPane mainPane = new BorderPane(mainScrollPane);
+        
+        
+        HBox menuPane = new HBox(10);
+        Region menuSpacer = new Region();
+        HBox.setHgrow(menuSpacer, Priority.ALWAYS);
+        Button addCryptoSceneButton = new Button("Add Crypto");
+        Button logoutButton = new Button("Logout");
+        menuPane.getChildren().addAll(menuLabel, menuSpacer, addCryptoSceneButton, logoutButton);
+        
+        cryptoList = new VBox(10);
+        cryptoList.setMaxWidth(1000);
+        cryptoList.setMinWidth(280);
+        refreshCryptoList();
+        
+        mainScrollPane.setContent(cryptoList);
+        mainPane.setTop(menuPane);
+        
+        addCryptoSceneButton.setOnAction(e -> {
+            primaryStage.setScene(cryptoAddScene);
+        });
+        
+        logoutButton.setOnAction(e -> {
+            service.logout();
+            primaryStage.setScene(loginScene);
+        });
+        
+        return new Scene(mainPane, 400, 250);
+    }
+    
+    private Scene constructLogInScene() {
         VBox loginPane = new VBox(10);
         HBox inputPane = new HBox(10);
         loginPane.setPadding(new Insets(10));
@@ -128,44 +172,10 @@ public class CryptoUI extends Application {
         
         loginPane.getChildren().addAll(loginMessage, inputPane, loginButton, registrationButton);
         
-        loginScene = new Scene(loginPane, 400, 250);
-        
-        
-        // MAIN SCENE (shown when logged in)
-        
-        ScrollPane mainScrollPane = new ScrollPane();
-        BorderPane mainPane = new BorderPane(mainScrollPane);
-        
-        
-        HBox menuPane = new HBox(10);
-        Region menuSpacer = new Region();
-        HBox.setHgrow(menuSpacer, Priority.ALWAYS);
-        Button addCryptoSceneButton = new Button("Add Crypto");
-        Button logoutButton = new Button("Logout");
-        menuPane.getChildren().addAll(menuLabel, menuSpacer, addCryptoSceneButton, logoutButton);
-        
-        cryptoList = new VBox(10);
-        cryptoList.setMaxWidth(1000);
-        cryptoList.setMinWidth(280);
-        refreshCryptoList();
-        
-        mainScrollPane.setContent(cryptoList);
-        mainPane.setTop(menuPane);
-        
-        addCryptoSceneButton.setOnAction(e -> {
-            primaryStage.setScene(cryptoAddScene);
-        });
-        
-        logoutButton.setOnAction(e -> {
-            service.logout();
-            primaryStage.setScene(loginScene);
-        });
-        
-        loggedInScene = new Scene(mainPane, 400, 250);
-        
-        
-        // ADD CRYPTO SCENE
-        
+        return new Scene(loginPane, 400, 250);
+    }
+    
+    private Scene constructCryptoAddScene() {
         VBox cryptoAddPane = new VBox(10);
         
         HBox cryptoNamePane = new HBox(10);
@@ -256,12 +266,10 @@ public class CryptoUI extends Application {
             primaryStage.setScene(loggedInScene);
         });
         
-        cryptoAddScene = new Scene(cryptoAddPane, 500, 300);
-        
-        
-        // CRYPTO BATCH SCENE
-        
-        
+        return new Scene(cryptoAddPane, 500, 300);
+    }
+    
+    private Scene constructCryptoBatchScene() {
         ScrollPane batchScrollPane = new ScrollPane();
         BorderPane batchPane = new BorderPane(batchScrollPane);
         
@@ -282,16 +290,7 @@ public class CryptoUI extends Application {
             primaryStage.setScene(loggedInScene);
         });
         
-        batchScene = new Scene(batchPane, 500, 300);
-        
-        // SETUP
-        
-        primaryStage.setTitle("CryptoTracker");
-        primaryStage.setScene(loginScene);
-        primaryStage.show();
-        primaryStage.setOnCloseRequest(e -> {
-            System.out.println("Closing program");
-        });
+        return new Scene(batchPane, 500, 300);
     }
     
     // ASSISTANCE METHODS

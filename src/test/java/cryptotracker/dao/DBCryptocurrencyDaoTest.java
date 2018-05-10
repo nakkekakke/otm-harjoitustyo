@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CryptocurrencyDaoTest {
+public class DBCryptocurrencyDaoTest {
     
     @InjectMocks
-    CryptocurrencyDao cryptoDao;
+    DBCryptocurrencyDao cryptoDao;
     
     @Mock
     Database database;
@@ -45,7 +45,7 @@ public class CryptocurrencyDaoTest {
     ResultSet rs;
     
     @Mock
-    PortfolioDao portfolioDao;
+    DBPortfolioDao portfolioDao;
     
     @Mock
     Portfolio testPortfolio;
@@ -251,7 +251,7 @@ public class CryptocurrencyDaoTest {
         List<Cryptocurrency> cryptoList = new ArrayList<>();
         cryptoList.add(testCrypto);
         
-        CryptocurrencyDao spyDao = spy(cryptoDao);
+        DBCryptocurrencyDao spyDao = spy(cryptoDao);
         doReturn(cryptoList).when(spyDao).findAllInPortfolio(testPortfolio);
         Cryptocurrency returnCrypto = spyDao.findOneInPortfolio(testCrypto, testPortfolio);
         
@@ -260,7 +260,7 @@ public class CryptocurrencyDaoTest {
     
     @Test
     public void findOneInPortfolioReturnsNullIfCryptoNotFound() throws SQLException {
-        CryptocurrencyDao spyDao = spy(cryptoDao);
+        DBCryptocurrencyDao spyDao = spy(cryptoDao);
         doReturn(null).when(spyDao).findOneInPortfolio(testCrypto, testPortfolio);
         Cryptocurrency returnCrypto = spyDao.findOneInPortfolio(testCrypto, testPortfolio);
         assertEquals(returnCrypto, null);
@@ -268,7 +268,7 @@ public class CryptocurrencyDaoTest {
     
     @Test
     public void saveSavesCryptoIfItDoesntExistYet() throws SQLException {
-        CryptocurrencyDao spyDao = spy(cryptoDao);
+        DBCryptocurrencyDao spyDao = spy(cryptoDao);
         doReturn(null).when(spyDao).findOneInPortfolio(testCrypto, testPortfolio);
         Cryptocurrency returnCrypto = spyDao.save(testCrypto, testPortfolio);
         
@@ -280,7 +280,7 @@ public class CryptocurrencyDaoTest {
     
     @Test
     public void saveDoesntSaveCryptoIfItAlreadyExists() throws SQLException {
-        CryptocurrencyDao spyDao = spy(cryptoDao);
+        DBCryptocurrencyDao spyDao = spy(cryptoDao);
         testCrypto = new Cryptocurrency(20, "test", testPortfolio);
         doReturn(testCrypto).when(spyDao).findOneInPortfolio(testCrypto, testPortfolio);
         Cryptocurrency returnCrypto = spyDao.save(testCrypto, testPortfolio);

@@ -31,16 +31,16 @@ public class CryptoServiceTest {
     CryptoService service;
     
     @Mock
-    UserDao mockUserDao;
+    DBUserDao mockUserDao;
     
     @Mock
-    PortfolioDao mockPortfolioDao;
+    DBPortfolioDao mockPortfolioDao;
     
     @Mock
-    CryptocurrencyDao mockCryptoDao;
+    DBCryptocurrencyDao mockCryptoDao;
     
     @Mock
-    CryptoBatchDao mockBatchDao;
+    DBCryptoBatchDao mockBatchDao;
     
     private User testUser;
     private Portfolio testFolio;
@@ -226,7 +226,6 @@ public class CryptoServiceTest {
         
         assertNotNull(spyService.createCryptoInstance("testCrypto"));
         verify(mockCryptoDao).save(any(Cryptocurrency.class), any(Portfolio.class));
-        
     }
     
     @Test

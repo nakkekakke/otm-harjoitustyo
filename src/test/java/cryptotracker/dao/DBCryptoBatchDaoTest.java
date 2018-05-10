@@ -2,14 +2,11 @@ package cryptotracker.dao;
 
 import cryptotracker.domain.CryptoBatch;
 import cryptotracker.domain.Cryptocurrency;
-import cryptotracker.domain.Portfolio;
-import cryptotracker.domain.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -17,13 +14,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -32,10 +27,10 @@ import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CryptoBatchDaoTest {
+public class DBCryptoBatchDaoTest {
     
     @InjectMocks
-    CryptoBatchDao batchDao;
+    DBCryptoBatchDao batchDao;
     
     @Mock
     Database database;
@@ -50,7 +45,7 @@ public class CryptoBatchDaoTest {
     ResultSet rs;
     
     @Mock
-    CryptocurrencyDao cryptoDao;
+    DBCryptocurrencyDao cryptoDao;
     
     @Mock
     Cryptocurrency testCrypto;
@@ -210,7 +205,7 @@ public class CryptoBatchDaoTest {
         List<CryptoBatch> batches = new ArrayList<>();
         batches.add(testBatch);
         
-        CryptoBatchDao spyDao = spy(batchDao);
+        DBCryptoBatchDao spyDao = spy(batchDao);
         doReturn(batches).when(spyDao).findAllFromCryptocurrency(testCrypto);
         
         CryptoBatch returnBatch = spyDao.findOneFromCryptocurrency(testBatch, testCrypto);
@@ -223,7 +218,7 @@ public class CryptoBatchDaoTest {
         List<CryptoBatch> batches = new ArrayList<>();
         batches.add(new CryptoBatch(100, 15, 13, LocalDate.now(), testCrypto));
         
-        CryptoBatchDao spyDao = spy(batchDao);
+        DBCryptoBatchDao spyDao = spy(batchDao);
         doReturn(batches).when(spyDao).findAllFromCryptocurrency(testCrypto);
         
         CryptoBatch returnBatch = spyDao.findOneFromCryptocurrency(testBatch, testCrypto);
