@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CryptoTracker
 
 Tämä sovellus on harjoitustyö kurssille Ohjelmistotekniikan menetelmät. Sovellukseen voi luoda oman portfolion, johon käyttäjä voi tallentaa tiedot omista kryptovaluuttasijoituksistaan. Näin käyttäjä voi seurata eri kryptovaluuttasijoituksiaan helposti ja nopeasti. **Sovellus on vielä keskeneräinen ja uusia toimintoja lisätään.** Sovellus on englanninkielinen.
